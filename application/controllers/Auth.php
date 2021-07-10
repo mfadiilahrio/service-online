@@ -48,7 +48,7 @@ class Auth extends CI_Controller {
 					'phone' 	=> $user->phone,
 					'address'	=> $user->address,
 					'dob'		=> $user->dob,
-					'user_type' => $auth->user_type,
+					'user_type' => $auth->user_type
 				);
 
 				$this->session->set_userdata($data_session);

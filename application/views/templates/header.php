@@ -224,36 +224,21 @@
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="<?= base_url("request") ?>" class="nav-link">
+                <a href="<?= base_url("booking") ?>" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
-                  <p>Request Barang</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="<?= base_url("transaction") ?>" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Data Transaksi</p>
+                  <p>Booking</p>
                 </a>
               </li>
             </ul>
           </li>
-          <?php if ($this->session->userdata('is_employee_read')) { ?>
           <li class="nav-item">
             <a href="#" class="nav-link">
               <i class="nav-icon fas fa-users"></i>
               <p>
-                Karyawan
+                User
                 <i class="right fas fa-angle-left"></i>
               </p>
             </a>
-            <ul class="nav nav-treeview">
-              <li class="nav-item">
-                <a href="<?= base_url("employee") ?>" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Data Karyawan</p>
-                </a>
-              </li>
-            </ul>
             <ul class="nav nav-treeview">
               <li class="nav-item">
                 <a href="<?= base_url("user") ?>" class="nav-link">
@@ -263,21 +248,19 @@
               </li>
             </ul>
           </li>
-          <?php } ?>
-          <?php if ($this->session->userdata('user_type') == 'super admin' || $this->session->userdata('user_type') == 'admin') { ?>
           <li class="nav-item">
             <a href="#" class="nav-link">
               <i class="nav-icon fas fa-boxes"></i>
               <p>
-                Toko & Barang
+                Bengkel & Barang
                 <i class="right fas fa-angle-left"></i>
               </p>
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="<?= base_url("store") ?>" class="nav-link">
+                <a href="<?= base_url("workshop") ?>" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
-                  <p>Data Toko</p>
+                  <p>Data Bengkel</p>
                 </a>
               </li>
             </ul>
@@ -289,16 +272,23 @@
                 </a>
               </li>
             </ul>
-            <ul class="nav nav-treeview">
-              <li class="nav-item">
-                <a href="<?= base_url("supply") ?>" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Data Suplai Barang</p>
-                </a>
-              </li>
-            </ul>
           </li>
-          <?php } ?>
+          <li class="nav-item">
+            <a href="<?= base_url("auth/bank") ?>" class="nav-link">
+              <i class="nav-icon fa fa-credit-card"></i>
+              <p>
+                Nomor Rekening
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="<?= base_url("auth/area") ?>" class="nav-link">
+              <i class="nav-icon fa fa-map"></i>
+              <p>
+                Area
+              </p>
+            </a>
+          </li>
           <li class="nav-item">
             <a href="<?= base_url("auth/logout") ?>" class="nav-link">
               <i class="nav-icon fas fa-sign-out-alt"></i>

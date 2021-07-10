@@ -10,6 +10,7 @@ class Booking extends CI_Controller {
 		parent::__construct();
 		
 		$this->load->model('m_base');
+		$this->load->model('m_booking');
 		$this->timeStamp = date('Y-m-d H:i:s', time());
 	}
 
@@ -24,7 +25,7 @@ class Booking extends CI_Controller {
 
 		$where = array();
 
-		$data['records'] = $this->m_base->getListWhere('bookings', $where);
+		$data['records'] = $this->m_booking->getBookings($where);
 
 		$data['page_name'] = $this->page_name;
 		$this->header();

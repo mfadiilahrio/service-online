@@ -33,11 +33,19 @@
               </div>
               <!-- /.card-header -->
               <div class="card-body">
-                <table id="example1" class="table table-bordered table-striped">
+                <table id="example1" class="table table-bordered table-striped nowrap">
                   <thead>
                   <tr>
                     <th>No</th>
-                    <th>ID Booking</th>
+                    <th>ID</th>
+                    <th>Customer</th>
+                    <th>Area</th>
+                    <th>Mekanik</th>
+                    <th>Keluhan</th>
+                    <th>Tanggal</th>
+                    <th>Biaya Tambahan</th>
+                    <th>Status</th>
+                    <th>Rekening</th>
                     <th>Aksi</th>
                   </tr>
                   </thead>
@@ -47,8 +55,19 @@
                     <?php foreach ($records as $record) { ?>
                       <tr>
                         <td><?= $no; ?></td>
-                        <td></td>
-                        <td></td>
+                        <td><?= $record->id ?></td>
+                        <td><?= $record->user_name ?></td>
+                        <td><?= $record->area_name ?></td>
+                        <td><?= $record->mechanic_name ?></td>
+                        <td><?= $record->complaint ?></td>
+                        <td><?= $record->date ?></td>
+                        <td><?= $record->other_cost ?></td>
+                        <td><?= $record->booking_status ?></td>
+                        <td><?= "$record->bank_name - $record->account_number" ?></td>
+                        <td>
+                          <a href="<?= base_url("booking/update?id=$record->id&booking_status=$record->next_booking_status") ?>" type="button" class="btn btn-outline-success btn-sm"><?= $record->next_booking_status_name ?></a>
+                          <a href="<?= base_url("booking?id=$record->id") ?>" type="button" class="btn btn-outline-primary btn-sm">Detail</a>
+                        </td>
                       </tr>
                       <?php $no++; } ?>
                   </tbody>

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:8889
--- Generation Time: Jul 10, 2021 at 09:24 AM
+-- Generation Time: Jul 10, 2021 at 07:36 PM
 -- Server version: 5.7.26
 -- PHP Version: 5.6.40
 
@@ -31,7 +31,10 @@ CREATE TABLE `areas` (
 
 INSERT INTO `areas` (`id`, `name`) VALUES
 (1, 'Jakarta'),
-(2, 'Bekasi');
+(2, 'Bogor'),
+(3, 'Depok'),
+(4, 'Tangerang'),
+(5, 'Bekasi');
 
 -- --------------------------------------------------------
 
@@ -44,7 +47,7 @@ CREATE TABLE `auth` (
   `email` varchar(100) NOT NULL,
   `password` varchar(100) NOT NULL,
   `user_id` int(11) NOT NULL,
-  `user_type` enum('customer','admin') NOT NULL
+  `user_type` enum('customer','admin','mechanic') NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -52,7 +55,9 @@ CREATE TABLE `auth` (
 --
 
 INSERT INTO `auth` (`id`, `email`, `password`, `user_id`, `user_type`) VALUES
-(1, 'admin@admin.com', '21232f297a57a5a743894a0e4a801fc3', 1, 'admin');
+(1, 'jonathan@admin.com', '21232f297a57a5a743894a0e4a801fc3', 1, 'admin'),
+(2, 'muhamadfrio@gmail.com', 'a5a2576f25e44aba47b6a3b2370cbae9', 2, 'customer'),
+(3, 'berto@gmail.com', 'cb0b4891e61ccdd415a20252001fc265', 3, 'mechanic');
 
 -- --------------------------------------------------------
 
@@ -105,6 +110,7 @@ CREATE TABLE `bookings` (
   `service_id` int(11) NOT NULL,
   `workshop_id` int(11) DEFAULT NULL,
   `area_id` int(11) NOT NULL,
+  `mechanic_id` int(11) NOT NULL,
   `complaint` text NOT NULL,
   `date` date NOT NULL,
   `address` varchar(255) NOT NULL,
@@ -113,10 +119,15 @@ CREATE TABLE `bookings` (
   `booking_status` enum('waiting_confirmation','confirmed','booking','process','waiting_payment','checking_payment','completed','canceled') NOT NULL DEFAULT 'waiting_confirmation',
   `bank_account_id` int(11) DEFAULT NULL,
   `payment_url` varchar(255) DEFAULT NULL,
-  `rating` int(11) DEFAULT NULL,
-  `review` text,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `bookings`
+--
+
+INSERT INTO `bookings` (`id`, `user_id`, `service_id`, `workshop_id`, `area_id`, `mechanic_id`, `complaint`, `date`, `address`, `other_cost`, `other_cost_note`, `booking_status`, `bank_account_id`, `payment_url`, `created_at`) VALUES
+(1, 2, 1, 1, 1, 3, 'Kampas rem abis', '2021-07-10', 'Taman alamanda blok G.11 No.29 RT/RW 002/RW022 Ds. Karang Satria Kec. Tambun Utara Kab. Bekasi 17510', 50000, 'Biaya pasang', 'waiting_confirmation', 1, NULL, '2021-07-10 10:03:32');
 
 -- --------------------------------------------------------
 
@@ -142,6 +153,16 @@ CREATE TABLE `brands` (
   `name` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--
+-- Dumping data for table `brands`
+--
+
+INSERT INTO `brands` (`id`, `name`) VALUES
+(1, 'Honda'),
+(2, 'Yamaha'),
+(3, 'Suzuki'),
+(4, 'Kawasaki');
+
 -- --------------------------------------------------------
 
 --
@@ -155,6 +176,14 @@ CREATE TABLE `brand_types` (
   `name` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--
+-- Dumping data for table `brand_types`
+--
+
+INSERT INTO `brand_types` (`id`, `transportation_type_id`, `brand_id`, `name`) VALUES
+(1, 1, 1, 'Honda'),
+(2, 1, 2, 'Mio');
+
 -- --------------------------------------------------------
 
 --
@@ -167,6 +196,16 @@ CREATE TABLE `problems` (
   `name` varchar(50) NOT NULL,
   `price` bigint(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `problems`
+--
+
+INSERT INTO `problems` (`id`, `brand_type_id`, `name`, `price`) VALUES
+(1, 1, 'Kampas rem depan', 50000),
+(2, 1, 'Kampas rem belakang', 60000),
+(3, 2, 'Kampas rem depan', 40000),
+(4, 2, 'Kampas rem belakang', 50000);
 
 -- --------------------------------------------------------
 
@@ -198,6 +237,14 @@ CREATE TABLE `transportation_types` (
   `status` tinyint(1) NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--
+-- Dumping data for table `transportation_types`
+--
+
+INSERT INTO `transportation_types` (`id`, `name`, `status`) VALUES
+(1, 'Motor', 1),
+(2, 'Mobil', 1);
+
 -- --------------------------------------------------------
 
 --
@@ -217,7 +264,9 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `name`, `phone`, `address`, `dob`) VALUES
-(1, 'Admin', '081111111111', 'Bekasi', '1111-01-01');
+(1, 'Admin', '082125207042', 'Bekasi Utara', '1111-01-01'),
+(2, 'M Fadhilah Rio Bagus Saputro', '089529037444', 'Taman alamanda blok G.11 No.29 RT/RW 002/RW022 Ds. Karang Satria Kec. Tambun Utara Kab. Bekasi 17510', '1998-05-08'),
+(3, 'Berto', '082111111111', 'Bekasi', '1997-07-01');
 
 -- --------------------------------------------------------
 
@@ -324,13 +373,13 @@ ALTER TABLE `workshops`
 -- AUTO_INCREMENT for table `areas`
 --
 ALTER TABLE `areas`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `auth`
 --
 ALTER TABLE `auth`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `banks`
@@ -348,7 +397,7 @@ ALTER TABLE `bank_accounts`
 -- AUTO_INCREMENT for table `bookings`
 --
 ALTER TABLE `bookings`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `bookings_problems`
@@ -360,10 +409,28 @@ ALTER TABLE `bookings_problems`
 -- AUTO_INCREMENT for table `brands`
 --
 ALTER TABLE `brands`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `brand_types`
+--
+ALTER TABLE `brand_types`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `problems`
+--
+ALTER TABLE `problems`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `transportation_types`
+--
+ALTER TABLE `transportation_types`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;

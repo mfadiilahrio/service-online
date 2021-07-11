@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:8889
--- Generation Time: Jul 10, 2021 at 07:36 PM
+-- Generation Time: Jul 11, 2021 at 07:25 PM
 -- Server version: 5.7.26
 -- PHP Version: 5.6.40
 
@@ -110,7 +110,7 @@ CREATE TABLE `bookings` (
   `service_id` int(11) NOT NULL,
   `workshop_id` int(11) DEFAULT NULL,
   `area_id` int(11) NOT NULL,
-  `mechanic_id` int(11) NOT NULL,
+  `mechanic_id` int(11) DEFAULT NULL,
   `complaint` text NOT NULL,
   `date` date NOT NULL,
   `address` varchar(255) NOT NULL,
@@ -127,18 +127,18 @@ CREATE TABLE `bookings` (
 --
 
 INSERT INTO `bookings` (`id`, `user_id`, `service_id`, `workshop_id`, `area_id`, `mechanic_id`, `complaint`, `date`, `address`, `other_cost`, `other_cost_note`, `booking_status`, `bank_account_id`, `payment_url`, `created_at`) VALUES
-(1, 2, 1, 1, 1, 3, 'Kampas rem abis', '2021-07-10', 'Taman alamanda blok G.11 No.29 RT/RW 002/RW022 Ds. Karang Satria Kec. Tambun Utara Kab. Bekasi 17510', 50000, 'Biaya pasang', 'waiting_confirmation', 1, NULL, '2021-07-10 10:03:32');
+(1, 2, 1, 1, 1, NULL, 'Kampas rem abis', '2021-07-10', 'Taman alamanda blok G.11 No.29 RT/RW 002/RW022 Ds. Karang Satria Kec. Tambun Utara Kab. Bekasi 17510', 50000, 'Biaya pasang', 'waiting_confirmation', 1, NULL, '2021-07-10 10:03:32');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `bookings_problems`
+-- Table structure for table `bookings_items`
 --
 
-CREATE TABLE `bookings_problems` (
+CREATE TABLE `bookings_items` (
   `id` int(11) NOT NULL,
   `booking_id` int(11) NOT NULL,
-  `problem_id` int(11) NOT NULL,
+  `item_id` int(11) NOT NULL,
   `price` bigint(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -187,10 +187,10 @@ INSERT INTO `brand_types` (`id`, `transportation_type_id`, `brand_id`, `name`) V
 -- --------------------------------------------------------
 
 --
--- Table structure for table `problems`
+-- Table structure for table `items`
 --
 
-CREATE TABLE `problems` (
+CREATE TABLE `items` (
   `id` int(11) NOT NULL,
   `brand_type_id` int(11) NOT NULL,
   `name` varchar(50) NOT NULL,
@@ -198,10 +198,10 @@ CREATE TABLE `problems` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `problems`
+-- Dumping data for table `items`
 --
 
-INSERT INTO `problems` (`id`, `brand_type_id`, `name`, `price`) VALUES
+INSERT INTO `items` (`id`, `brand_type_id`, `name`, `price`) VALUES
 (1, 1, 'Kampas rem depan', 50000),
 (2, 1, 'Kampas rem belakang', 60000),
 (3, 2, 'Kampas rem depan', 40000),
@@ -318,9 +318,9 @@ ALTER TABLE `bookings`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `bookings_problems`
+-- Indexes for table `bookings_items`
 --
-ALTER TABLE `bookings_problems`
+ALTER TABLE `bookings_items`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -336,9 +336,9 @@ ALTER TABLE `brand_types`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `problems`
+-- Indexes for table `items`
 --
-ALTER TABLE `problems`
+ALTER TABLE `items`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -400,9 +400,9 @@ ALTER TABLE `bookings`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
--- AUTO_INCREMENT for table `bookings_problems`
+-- AUTO_INCREMENT for table `bookings_items`
 --
-ALTER TABLE `bookings_problems`
+ALTER TABLE `bookings_items`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
@@ -418,9 +418,9 @@ ALTER TABLE `brand_types`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
--- AUTO_INCREMENT for table `problems`
+-- AUTO_INCREMENT for table `items`
 --
-ALTER TABLE `problems`
+ALTER TABLE `items`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --

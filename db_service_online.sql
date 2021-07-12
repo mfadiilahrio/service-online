@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:8889
--- Generation Time: Jul 11, 2021 at 07:25 PM
+-- Generation Time: Jul 12, 2021 at 09:19 PM
 -- Server version: 5.7.26
 -- PHP Version: 5.6.40
 
@@ -57,7 +57,9 @@ CREATE TABLE `auth` (
 INSERT INTO `auth` (`id`, `email`, `password`, `user_id`, `user_type`) VALUES
 (1, 'jonathan@admin.com', '21232f297a57a5a743894a0e4a801fc3', 1, 'admin'),
 (2, 'muhamadfrio@gmail.com', 'a5a2576f25e44aba47b6a3b2370cbae9', 2, 'customer'),
-(3, 'berto@gmail.com', 'cb0b4891e61ccdd415a20252001fc265', 3, 'mechanic');
+(3, 'berto@gmail.com', 'cb0b4891e61ccdd415a20252001fc265', 3, 'mechanic'),
+(4, 'muhamadfrio+1@gmail.com', 'b4e43f8dbebf6f339dbb6948ddfcbddd', 4, 'customer'),
+(5, 'muhamadfrio+2@gmail.com', 'b4e43f8dbebf6f339dbb6948ddfcbddd', 5, 'customer');
 
 -- --------------------------------------------------------
 
@@ -194,18 +196,19 @@ CREATE TABLE `items` (
   `id` int(11) NOT NULL,
   `brand_type_id` int(11) NOT NULL,
   `name` varchar(50) NOT NULL,
-  `price` bigint(20) NOT NULL
+  `price` bigint(20) NOT NULL,
+  `qty` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `items`
 --
 
-INSERT INTO `items` (`id`, `brand_type_id`, `name`, `price`) VALUES
-(1, 1, 'Kampas rem depan', 50000),
-(2, 1, 'Kampas rem belakang', 60000),
-(3, 2, 'Kampas rem depan', 40000),
-(4, 2, 'Kampas rem belakang', 50000);
+INSERT INTO `items` (`id`, `brand_type_id`, `name`, `price`, `qty`) VALUES
+(1, 1, 'Kampas rem depan', 50000, 100),
+(2, 1, 'Kampas rem belakang', 60000, 100),
+(3, 2, 'Kampas rem depan', 40000, 100),
+(4, 2, 'Kampas rem belakang', 50000, 100);
 
 -- --------------------------------------------------------
 
@@ -253,9 +256,9 @@ INSERT INTO `transportation_types` (`id`, `name`, `status`) VALUES
 
 CREATE TABLE `users` (
   `id` int(11) NOT NULL,
-  `name` varchar(100) NOT NULL,
-  `phone` varchar(20) NOT NULL,
-  `address` varchar(255) NOT NULL,
+  `name` varchar(100) DEFAULT NULL,
+  `phone` varchar(20) DEFAULT NULL,
+  `address` varchar(255) DEFAULT NULL,
   `dob` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -266,7 +269,9 @@ CREATE TABLE `users` (
 INSERT INTO `users` (`id`, `name`, `phone`, `address`, `dob`) VALUES
 (1, 'Admin', '082125207042', 'Bekasi Utara', '1111-01-01'),
 (2, 'M Fadhilah Rio Bagus Saputro', '089529037444', 'Taman alamanda blok G.11 No.29 RT/RW 002/RW022 Ds. Karang Satria Kec. Tambun Utara Kab. Bekasi 17510', '1998-05-08'),
-(3, 'Berto', '082111111111', 'Bekasi', '1997-07-01');
+(3, 'Berto', '082111111111', 'Bekasi', '1997-07-01'),
+(4, NULL, NULL, NULL, NULL),
+(5, NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -379,7 +384,7 @@ ALTER TABLE `areas`
 -- AUTO_INCREMENT for table `auth`
 --
 ALTER TABLE `auth`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `banks`
@@ -433,4 +438,4 @@ ALTER TABLE `transportation_types`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;

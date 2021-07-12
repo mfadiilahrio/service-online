@@ -26,27 +26,35 @@ class M_booking extends CI_Model {
 		if ($data->booking_status == 'waiting_confirmation') {
 			$data->booking_status = 'Menunggu Persetujuan';
 			$data->next_booking_status = 'confirmed';
+			$data->next_booking_status_name = 'Konfirmasi';
 		} else if ($data->booking_status == 'confirmed') {
 			$data->booking_status = 'Dikonfirmasi';
 			$data->next_booking_status = 'booking';
+			$data->next_booking_status_name = 'Booking';
 		} else if ($data->booking_status == 'booking') {
 			$data->booking_status = 'Booking';
 			$data->next_booking_status = 'process';
+			$data->next_booking_status_name = 'Proses';
 		} else if ($data->booking_status == 'process') {
 			$data->booking_status = 'Diproses';
 			$data->next_booking_status = 'waiting_payment';
+			$data->next_booking_status_name = 'Menunggu Pembayaran';
 		} else if ($data->booking_status == 'waiting_payment') {
 			$data->booking_status = 'Menunggu Pembayaran';
 			$data->next_booking_status = 'checking_payment';
+			$data->next_booking_status_name = 'Mengecek Pembayaran';
 		} else if ($data->booking_status == 'checking_payment') {
 			$data->booking_status = 'Mengecek Pembayaran';
 			$data->next_booking_status = 'completed';
+			$data->next_booking_status_name = 'Selesai';
 		} else if ($data->booking_status == 'completed') {
 			$data->booking_status = 'Selesai';
 			$data->next_booking_status = null;
+			$data->next_booking_status_name = null;
 		} else if ($data->booking_status == 'canceled') {
 			$data->booking_status = 'Dibatalkan';
 			$data->next_booking_status = null;
+			$data->next_booking_status_name = null;
 		}
 
 		return $data;

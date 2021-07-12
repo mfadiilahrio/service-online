@@ -25,6 +25,12 @@ class Booking extends CI_Controller {
 
 		$where = array();
 
+		if ($this->session->userdata('user_type') == 'customer') {
+			$where['user_id'] = $this->session->userdata('user_id');
+		} else if($this->session->userdata('user_type') == 'mechanic') {
+			$where['mechanic_id'] = $this->session->userdata('user_id');
+		}
+
 		$data['records'] = $this->m_booking->getBookings($where);
 
 		$data['page_name'] = $this->page_name;

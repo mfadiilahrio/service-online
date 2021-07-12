@@ -82,36 +82,26 @@
         <!-- /.row -->
       </div>
       <!-- /.container-fluid -->
-      <div class="modal fade" id="modal-deposit">
+      <div class="modal fade" id="modal-the-id">
         <div class="modal-dialog">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title">Setor Uang</h5>
+              <h5 class="modal-title">The Title</h5>
               <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
             </div>
             <div class="modal-body">
-              <form action="<?= base_url("request/update") ?>" method="POST" enctype="multipart/form-data">
+              <form action="<?= base_url("home") ?>" method="POST" enctype="multipart/form-data">
                 <div class="row">
                   <div class="col-md-12">
                     <div class="form-group">
-                      <label>Uang yang harus disetorkan</label>
-                      <input type="text" class="form-control" id="m_total_deposit" disabled>
-                      <input type="hidden" class="form-control" name="request_status" value="deposited">
-                      <input type="hidden" class="form-control" id="m_id" name="id">
+                      <label>The Label</label>
+                      <input type="number" class="form-control" name="the_label" required>
                     </div>
                   </div>
                 </div>
-                <div class="row">
-                  <div class="col-md-12">
-                    <div class="form-group">
-                      <label>Setorkan</label>
-                      <input type="number" class="form-control" name="deposit" required>
-                    </div>
-                  </div>
-                </div>
-                <button type="submit" class="btn btn-primary btn-sm">Setor</button>
+                <button type="submit" class="btn btn-primary btn-sm">The Button</button>
               </form>
             </div>
             <div class="modal-footer justify-content-between">

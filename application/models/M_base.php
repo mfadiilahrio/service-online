@@ -24,7 +24,15 @@ class M_base extends CI_Model {
 		if($this->db->insert($table_name, $data)) {
 			return true;
 		} else {
-			return fals;
+			return false;
+		}
+	}
+
+	function createDataWithInsertID($table_name, $data) {
+		if($this->db->insert($table_name, $data)) {
+			return$this->db->insert_id();
+		} else {
+			return false;
 		}
 	}
 

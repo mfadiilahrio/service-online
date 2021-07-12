@@ -58,6 +58,15 @@
 <!-- Page specific script -->
 <script>
   $(function () {
+    var path = window.location.href;
+    $('ul a').each(function() {
+      if (this.href === path) {
+       $(this).addClass('active');
+       $(this).closest('.main-nav').addClass('menu-open');
+     }
+   });
+
+
     <?php if ($success != null or $success != '') { ?>
       Swal.fire({
         toast: true,

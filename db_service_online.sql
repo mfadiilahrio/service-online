@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:8889
--- Generation Time: Jul 12, 2021 at 09:19 PM
+-- Generation Time: Jul 15, 2021 at 04:15 AM
 -- Server version: 5.7.26
 -- PHP Version: 5.6.40
 
@@ -141,8 +141,17 @@ CREATE TABLE `bookings_items` (
   `id` int(11) NOT NULL,
   `booking_id` int(11) NOT NULL,
   `item_id` int(11) NOT NULL,
-  `price` bigint(20) NOT NULL
+  `price` bigint(20) NOT NULL,
+  `qty` int(11) NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `bookings_items`
+--
+
+INSERT INTO `bookings_items` (`id`, `booking_id`, `item_id`, `price`, `qty`) VALUES
+(1, 1, 1, 40000, 1),
+(2, 1, 2, 50000, 1);
 
 -- --------------------------------------------------------
 
@@ -189,6 +198,45 @@ INSERT INTO `brand_types` (`id`, `transportation_type_id`, `brand_id`, `name`) V
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `carts`
+--
+
+CREATE TABLE `carts` (
+  `id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `carts`
+--
+
+INSERT INTO `carts` (`id`, `user_id`) VALUES
+(1, 2);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `cart_items`
+--
+
+CREATE TABLE `cart_items` (
+  `id` int(11) NOT NULL,
+  `cart_id` int(11) NOT NULL,
+  `item_id` int(11) NOT NULL,
+  `qty` int(11) NOT NULL DEFAULT '1'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `cart_items`
+--
+
+INSERT INTO `cart_items` (`id`, `cart_id`, `item_id`, `qty`) VALUES
+(1, 1, 1, 2),
+(2, 1, 2, 2);
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `items`
 --
 
@@ -218,15 +266,19 @@ INSERT INTO `items` (`id`, `brand_type_id`, `name`, `price`, `qty`) VALUES
 
 CREATE TABLE `services` (
   `id` int(11) NOT NULL,
-  `name` varchar(255) NOT NULL
+  `name` varchar(255) NOT NULL,
+  `description` text NOT NULL,
+  `image_url` varchar(255) DEFAULT NULL,
+  `url` varchar(20) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `services`
 --
 
-INSERT INTO `services` (`id`, `name`) VALUES
-(1, 'Booking Teknisi Rumah');
+INSERT INTO `services` (`id`, `name`, `description`, `image_url`, `url`) VALUES
+(1, 'Belanja Spare Part', 'Belanja kebutuhan kendaraan kamu dari rumah, biar kami kirim secepatnya', 'assets/images/shopping-cart.png', 'shopping'),
+(2, 'Booking Teknisi Rumah', 'Tetap dirumah aja, biar teknisi kami yang datang ke lokasimu', 'assets/images/maintenance.png', 'bookingservice');
 
 -- --------------------------------------------------------
 
@@ -341,6 +393,18 @@ ALTER TABLE `brand_types`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `carts`
+--
+ALTER TABLE `carts`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `cart_items`
+--
+ALTER TABLE `cart_items`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `items`
 --
 ALTER TABLE `items`
@@ -408,7 +472,7 @@ ALTER TABLE `bookings`
 -- AUTO_INCREMENT for table `bookings_items`
 --
 ALTER TABLE `bookings_items`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `brands`
@@ -423,10 +487,28 @@ ALTER TABLE `brand_types`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
+-- AUTO_INCREMENT for table `carts`
+--
+ALTER TABLE `carts`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `cart_items`
+--
+ALTER TABLE `cart_items`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
 -- AUTO_INCREMENT for table `items`
 --
 ALTER TABLE `items`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT for table `services`
+--
+ALTER TABLE `services`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `transportation_types`

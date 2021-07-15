@@ -10,35 +10,27 @@
     <!-- Main content -->
     <section class="content">
       <div class="container-fluid">
-        <div class="row">
-          <div class="col-12">
-            <div class="card">
-              <div class="card-body">
-                <div class="row">
-                  <?php foreach ($records as $record) : ?>
-                    <div class="col-md-3">
-                      <div class="card">
-                        <a href="<?= base_url("$record->url") ?>" class="p-3">
-                          <img src="<?= base_url("$record->image_url") ?>" class="card-img-top" alt="<?= base_url("$record->image_url") ?>">
-                        </a>
-                        <div class="card-body">
-                          <div class="row">
-                            <div class="col-md-12">
-                              <h5 class="card-title"><?= $record->name ?></h5>
-                            </div>
-                          </div>
-                        </div>
-                        <div class="card-footer">
-                          <p class="card-text"><?= $record->description ?></p>
-                        </div>
-                      </div>
-                      <br>
+        <div class="row justify-content-md-center">
+          <?php foreach ($records as $record) : ?>
+            <div class="col-md-3">
+              <div class="card">
+                <a href="<?= base_url("$record->url") ?>" class="p-3">
+                  <img src="<?= base_url("$record->image_url") ?>" class="card-img-top w-50 mx-auto d-block" alt="<?= base_url("$record->image_url") ?>">
+                </a>
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col-md-12">
+                      <h5 class="card-title text-bold"><?= $record->name ?></h5>
                     </div>
-                  <?php endforeach ?>
+                  </div>
+                </div>
+                <div class="card-footer">
+                  <p class="card-text text-secondary"><?= $record->description ?></p>
                 </div>
               </div>
+              <br>
             </div>
-          </div>
+          <?php endforeach ?>
         </div>
       </div>
       <!-- /.container-fluid -->

@@ -15,15 +15,6 @@ class M_user extends CI_Model {
 		$this->db->order_by('users.id', 'desc');
 		return $this->db->get('users')->result();
 	}
-
-	function getNonUserAuths() {
-		$this->db->select('users.id');
-		$this->db->select('users.name');
-		$this->db->join('users', 'users.user_id = users.id', 'left');
-		$this->db->where('users.id IS NULL');
-		$this->db->order_by('users.id', 'desc');
-		return $this->db->get('users')->result();
-	}
 }
 
 /* End of file m_user.php */

@@ -1,9 +1,9 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Home extends CI_Controller {
+class Shopping extends CI_Controller {
 
-	var $page_name = "Home"; 
+	var $page_name = "Belanja"; 
 
 	public function __construct()
 	{
@@ -23,7 +23,7 @@ class Home extends CI_Controller {
 
 		$data['page_name'] = $this->page_name;
 		$this->header();
-		$this->load->view('home/index', $data);
+		$this->load->view('shopping/index', $data);
 		$this->footer();
 	}
 
@@ -45,5 +45,5 @@ class Home extends CI_Controller {
 
 }
 
-/* End of file Home */
-/* Location: ./application/controllers/Home */
+/* End of file Shopping.php */
+/* Location: ./application/controllers/Shopping.php */

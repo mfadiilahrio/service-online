@@ -36,6 +36,14 @@ class M_base extends CI_Model {
 		}
 	}
 
+	function countData($table_name, $where) {
+		foreach ($where as $key => $value) {
+			$this->db->where($key, $value);	
+		}
+		$this->db->from($table_name);
+		return $this->db->count_all_results();
+	}
+
 }
 
 /* End of file m_base.php */

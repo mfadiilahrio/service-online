@@ -14,43 +14,34 @@
           <div class="col-12">
             <div class="card">
               <div class="card-body">
+                <div class="row">
+                  <?php foreach ($records as $record) : ?>
+                    <div class="col-md-3">
+                      <div class="card">
+                        <a href="<?= base_url("$record->url") ?>" class="p-3">
+                          <img src="<?= base_url("$record->image_url") ?>" class="card-img-top" alt="<?= base_url("$record->image_url") ?>">
+                        </a>
+                        <div class="card-body">
+                          <div class="row">
+                            <div class="col-md-12">
+                              <h5 class="card-title"><?= $record->name ?></h5>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="card-footer">
+                          <p class="card-text"><?= $record->description ?></p>
+                        </div>
+                      </div>
+                      <br>
+                    </div>
+                  <?php endforeach ?>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
       <!-- /.container-fluid -->
-      <div class="modal fade" id="modal-the-id">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title">The Title</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div class="modal-body">
-              <form action="<?= base_url("home") ?>" method="POST" enctype="multipart/form-data">
-                <div class="row">
-                  <div class="col-md-12">
-                    <div class="form-group">
-                      <label>The Label</label>
-                      <input type="number" class="form-control" name="the_label" required>
-                    </div>
-                  </div>
-                </div>
-                <button type="submit" class="btn btn-primary btn-sm">The Button</button>
-              </form>
-            </div>
-            <div class="modal-footer justify-content-between">
-              <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">Tutup</button>
-            </div>
-          </div>
-          <!-- /.modal-content -->
-        </div>
-        <!-- /.modal-dialog -->
-      </div>
-      <!-- /.modal -->
     </section>
     <!-- /.content -->
   </div>

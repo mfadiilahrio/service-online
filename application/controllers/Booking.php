@@ -11,6 +11,7 @@ class Booking extends CI_Controller {
 		
 		$this->load->model('m_base');
 		$this->load->model('m_booking');
+		$this->load->model('m_cart');
 		$this->timeStamp = date('Y-m-d H:i:s', time());
 	}
 
@@ -41,7 +42,13 @@ class Booking extends CI_Controller {
 
 	public function header()
 	{
-		$this->load->view('templates/header');
+		$data = array();
+
+		if($this->session->userdata('user_id') != null){
+			$data['cart_total'] = $this->m_cart->getTotalCartItems($this->session->userdata('user_id'));
+		}
+		
+		$this->load->view('templates/header', $data);
 	}
 
 	public function footer()

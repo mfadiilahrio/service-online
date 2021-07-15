@@ -49,9 +49,6 @@
       <li class="nav-item">
         <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
       </li>
-      <li class="nav-item d-none d-sm-inline-block">
-        <a href="<?= base_url() ?>" class="nav-link">Home</a>
-      </li>
     </ul>
 
     <!-- Right navbar links -->
@@ -141,7 +138,9 @@
       <li class="nav-item dropdown">
         <a class="nav-link" href="<?= base_url("cart") ?>">
           <i class="fas fa-shopping-cart"></i>
-          <span class="badge badge-warning navbar-badge">15</span>
+          <span class="badge badge-warning navbar-badge">
+            <?= (isset($cart_total->qty)) ? $cart_total->qty : "0" ?>
+          </span>
         </a>
       </li>
       <?php endif ?>

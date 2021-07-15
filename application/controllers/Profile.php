@@ -1,9 +1,9 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Bookingservice extends CI_Controller {
+class Profile extends CI_Controller {
 
-	var $page_name = "Booking Servis"; 
+	var $page_name = "Profil"; 
 
 	public function __construct()
 	{
@@ -19,11 +19,9 @@ class Bookingservice extends CI_Controller {
 		$data['success'] = $this->session->flashdata('success');
 		$data['error'] = $this->session->flashdata('error');
 
-		$data['records'] = $this->m_base->getListWhere('services', array());
-
 		$data['page_name'] = $this->page_name;
 		$this->header();
-		$this->load->view('bookingservice/index', $data);
+		$this->load->view('profile/index', $data);
 		$this->footer();
 	}
 
@@ -45,5 +43,5 @@ class Bookingservice extends CI_Controller {
 
 }
 
-/* End of file Bookingservice */
-/* Location: ./application/controllers/Bookingservice */
+/* End of file Profile.php */
+/* Location: ./application/controllers/Profile.php */

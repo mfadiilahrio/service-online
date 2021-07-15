@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:8889
--- Generation Time: Jul 15, 2021 at 04:15 AM
+-- Generation Time: Jul 15, 2021 at 05:01 AM
 -- Server version: 5.7.26
 -- PHP Version: 5.6.40
 
@@ -114,11 +114,11 @@ CREATE TABLE `bookings` (
   `area_id` int(11) NOT NULL,
   `mechanic_id` int(11) DEFAULT NULL,
   `complaint` text NOT NULL,
-  `date` date NOT NULL,
+  `date` datetime NOT NULL,
   `address` varchar(255) NOT NULL,
   `other_cost` bigint(20) DEFAULT NULL,
   `other_cost_note` text,
-  `booking_status` enum('waiting_confirmation','confirmed','booking','process','waiting_payment','checking_payment','completed','canceled') NOT NULL DEFAULT 'waiting_confirmation',
+  `booking_status` enum('waiting_confirmation','confirmed','booking','process','shipped','waiting_payment','checking_payment','completed','canceled') NOT NULL DEFAULT 'waiting_confirmation',
   `bank_account_id` int(11) DEFAULT NULL,
   `payment_url` varchar(255) DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
@@ -129,7 +129,8 @@ CREATE TABLE `bookings` (
 --
 
 INSERT INTO `bookings` (`id`, `user_id`, `service_id`, `workshop_id`, `area_id`, `mechanic_id`, `complaint`, `date`, `address`, `other_cost`, `other_cost_note`, `booking_status`, `bank_account_id`, `payment_url`, `created_at`) VALUES
-(1, 2, 1, 1, 1, NULL, 'Kampas rem abis', '2021-07-10', 'Taman alamanda blok G.11 No.29 RT/RW 002/RW022 Ds. Karang Satria Kec. Tambun Utara Kab. Bekasi 17510', 50000, 'Biaya pasang', 'waiting_confirmation', 1, NULL, '2021-07-10 10:03:32');
+(10001, 2, 1, 1, 1, NULL, 'Kampas rem abis', '2021-07-10 08:00:00', 'Taman alamanda blok G.11 No.29 RT/RW 002/RW022 Ds. Karang Satria Kec. Tambun Utara Kab. Bekasi 17510', 50000, 'Biaya pasang', 'waiting_confirmation', NULL, NULL, '2021-07-10 10:03:32'),
+(10002, 2, 1, 1, 1, NULL, 'Ganti oli', '2021-07-10 14:00:00', 'Taman alamanda blok G.11 No.29 RT/RW 002/RW022 Ds. Karang Satria Kec. Tambun Utara Kab. Bekasi 17510', 50000, 'Biaya pasang', 'waiting_confirmation', NULL, NULL, '2021-07-15 02:57:39');
 
 -- --------------------------------------------------------
 
@@ -150,8 +151,9 @@ CREATE TABLE `bookings_items` (
 --
 
 INSERT INTO `bookings_items` (`id`, `booking_id`, `item_id`, `price`, `qty`) VALUES
-(1, 1, 1, 40000, 1),
-(2, 1, 2, 50000, 1);
+(1, 10001, 1, 40000, 1),
+(2, 10001, 2, 50000, 1),
+(3, 10002, 5, 42900, 1);
 
 -- --------------------------------------------------------
 
@@ -242,8 +244,8 @@ INSERT INTO `cart_items` (`id`, `cart_id`, `item_id`, `qty`) VALUES
 
 CREATE TABLE `items` (
   `id` int(11) NOT NULL,
-  `brand_type_id` int(11) NOT NULL,
-  `name` varchar(50) NOT NULL,
+  `brand_type_id` int(11) DEFAULT NULL,
+  `name` varchar(100) NOT NULL,
   `price` bigint(20) NOT NULL,
   `qty` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -256,7 +258,8 @@ INSERT INTO `items` (`id`, `brand_type_id`, `name`, `price`, `qty`) VALUES
 (1, 1, 'Kampas rem depan', 50000, 100),
 (2, 1, 'Kampas rem belakang', 60000, 100),
 (3, 2, 'Kampas rem depan', 40000, 100),
-(4, 2, 'Kampas rem belakang', 50000, 100);
+(4, 2, 'Kampas rem belakang', 50000, 100),
+(5, NULL, 'Pertamina Enduro Matic, 10W-30, API SL, JASO MB 0.8L 1pc', 42900, 50);
 
 -- --------------------------------------------------------
 
@@ -466,13 +469,13 @@ ALTER TABLE `bank_accounts`
 -- AUTO_INCREMENT for table `bookings`
 --
 ALTER TABLE `bookings`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10003;
 
 --
 -- AUTO_INCREMENT for table `bookings_items`
 --
 ALTER TABLE `bookings_items`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `brands`
@@ -502,7 +505,7 @@ ALTER TABLE `cart_items`
 -- AUTO_INCREMENT for table `items`
 --
 ALTER TABLE `items`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `services`

@@ -1,3 +1,8 @@
+  <style type="text/css">
+    #example1 tbody tr {  
+      cursor: pointer;
+    }
+  </style>
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
     <!-- Content Header (Page header) -->
@@ -21,7 +26,7 @@
     <section class="content">
       <div class="container-fluid">
         <div class="row">
-          <a href="<?= base_url("request/add") ?>" class="btn btn-app bg-success">
+          <a href="<?= base_url("request/add") ?>" class="btn btn-app bg-success" hidden>
             <i class="fas fa-plus"></i> Tambah
           </a>
         </div>
@@ -33,7 +38,7 @@
               </div>
               <!-- /.card-header -->
               <div class="card-body">
-                <table id="example1" class="table table-bordered table-striped nowrap">
+                <table id="example1" class="table table-bordered table-hover nowrap">
                   <thead>
                   <tr>
                     <th>No</th>
@@ -46,28 +51,23 @@
                     <th>Biaya Tambahan</th>
                     <th>Status</th>
                     <th>Rekening</th>
-                    <th>Aksi</th>
                   </tr>
                   </thead>
                   <tbody>
                     <?php $no = 1; ?>
 
                     <?php foreach ($records as $record) { ?>
-                      <tr>
+                      <tr class="clickable-row" onclick="window.location='<?= base_url("booking?id=$record->id") ?>'" class="clickable-row">
                         <td><?= $no; ?></td>
                         <td><?= $record->id ?></td>
                         <td><?= $record->user_name ?></td>
                         <td><?= $record->area_name ?></td>
                         <td><?= $record->mechanic_name ?></td>
-                        <td><?= $record->complaint ?></td>
+                        <td class="text-truncate" style="max-width: 150px;"><?= $record->complaint ?></td>
                         <td><?= $record->date ?></td>
-                        <td><?= $record->other_cost ?></td>
+                        <td><?= "Rp " . number_format($record->other_cost, 0, ",", ".") ?></td>
                         <td><?= $record->booking_status ?></td>
                         <td><?= "$record->bank_name - $record->account_number" ?></td>
-                        <td>
-                          <a href="<?= base_url("booking/update?id=$record->id&booking_status=$record->next_booking_status") ?>" type="button" class="btn btn-outline-success btn-sm"><?= $record->next_booking_status_name ?></a>
-                          <a href="<?= base_url("booking?id=$record->id") ?>" type="button" class="btn btn-outline-primary btn-sm">Detail</a>
-                        </td>
                       </tr>
                       <?php $no++; } ?>
                   </tbody>

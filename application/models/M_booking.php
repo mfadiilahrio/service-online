@@ -20,6 +20,7 @@ class M_booking extends CI_Model {
 		$this->db->join('users m', 'm.id = bookings.mechanic_id', 'left');
 		$this->db->join('bank_accounts', 'bank_accounts.id = bookings.bank_account_id', 'left');
 		$this->db->join('banks', 'banks.id = bank_accounts.bank_id', 'left');
+		$this->db->order_by('bookings.id', 'desc');
 
 		$data = $this->db->get_where('bookings', $where)->row();
 

@@ -17,10 +17,6 @@ class Booking extends CI_Controller {
 
 	public function index()
 	{
-		if($this->session->userdata('id') == null && $this->session->userdata('user_type') != 'admin'){
-			redirect(base_url("auth"));
-		}
-
 		$data['success'] = $this->session->flashdata('success');
 		$data['error'] = $this->session->flashdata('error');
 
@@ -42,10 +38,15 @@ class Booking extends CI_Controller {
 
 	public function header()
 	{
+		if($this->session->userdata('id') == null){
+			redirect(base_url("auth"));
+		}
+
 		$data = array();
 
 		if($this->session->userdata('user_id') != null){
 			$data['cart_total'] = $this->m_cart->getTotalCartItems($this->session->userdata('user_id'));
+			$data['booking_cart_total'] = $this->m_cart->getTotalBookingCartItems($this->session->userdata('user_id'));
 		}
 		
 		$this->load->view('templates/header', $data);

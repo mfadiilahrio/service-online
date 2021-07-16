@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:8889
--- Generation Time: Jul 15, 2021 at 05:01 AM
+-- Generation Time: Jul 16, 2021 at 09:35 PM
 -- Server version: 5.7.26
 -- PHP Version: 5.6.40
 
@@ -194,7 +194,7 @@ CREATE TABLE `brand_types` (
 --
 
 INSERT INTO `brand_types` (`id`, `transportation_type_id`, `brand_id`, `name`) VALUES
-(1, 1, 1, 'Honda'),
+(1, 1, 1, 'Beat'),
 (2, 1, 2, 'Mio');
 
 -- --------------------------------------------------------
@@ -205,15 +205,18 @@ INSERT INTO `brand_types` (`id`, `transportation_type_id`, `brand_id`, `name`) V
 
 CREATE TABLE `carts` (
   `id` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL
+  `user_id` int(11) NOT NULL,
+  `type` enum('booking','shopping') NOT NULL DEFAULT 'shopping',
+  `status` tinyint(1) NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `carts`
 --
 
-INSERT INTO `carts` (`id`, `user_id`) VALUES
-(1, 2);
+INSERT INTO `carts` (`id`, `user_id`, `type`, `status`) VALUES
+(1, 2, 'shopping', 0),
+(2, 2, 'booking', 1);
 
 -- --------------------------------------------------------
 
@@ -233,8 +236,15 @@ CREATE TABLE `cart_items` (
 --
 
 INSERT INTO `cart_items` (`id`, `cart_id`, `item_id`, `qty`) VALUES
-(1, 1, 1, 2),
-(2, 1, 2, 2);
+(1, 1, 1, 1),
+(2, 1, 2, 1),
+(3, 2, 1, 7),
+(4, 2, 2, 4),
+(5, 2, 5, 4),
+(6, 2, 11, 2),
+(7, 2, 7, 4),
+(8, 2, 10, 1),
+(9, 2, 8, 3);
 
 -- --------------------------------------------------------
 
@@ -247,6 +257,7 @@ CREATE TABLE `items` (
   `brand_type_id` int(11) DEFAULT NULL,
   `name` varchar(100) NOT NULL,
   `price` bigint(20) NOT NULL,
+  `image_url` varchar(255) DEFAULT NULL,
   `qty` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -254,12 +265,18 @@ CREATE TABLE `items` (
 -- Dumping data for table `items`
 --
 
-INSERT INTO `items` (`id`, `brand_type_id`, `name`, `price`, `qty`) VALUES
-(1, 1, 'Kampas rem depan', 50000, 100),
-(2, 1, 'Kampas rem belakang', 60000, 100),
-(3, 2, 'Kampas rem depan', 40000, 100),
-(4, 2, 'Kampas rem belakang', 50000, 100),
-(5, NULL, 'Pertamina Enduro Matic, 10W-30, API SL, JASO MB 0.8L 1pc', 42900, 50);
+INSERT INTO `items` (`id`, `brand_type_id`, `name`, `price`, `image_url`, `qty`) VALUES
+(1, 1, 'Kampas rem depan', 50000, '', 100),
+(2, 1, 'Kampas rem belakang', 60000, '', 100),
+(3, 2, 'Kampas rem depan', 40000, '', 100),
+(4, 2, 'Kampas rem belakang', 50000, '', 100),
+(5, NULL, 'Pertamina Enduro Matic, 10W-30, API SL, JASO MB 0.8L 1pc', 42900, 'assets/images/item_5.png', 50),
+(6, 1, 'Filter udara', 85000, '', 100),
+(7, 1, 'Lampu depan', 25900, '', 100),
+(8, 1, 'Kampas rem belakang', 60000, '', 100),
+(9, 1, 'Lampu belakang', 26000, '', 100),
+(10, 1, 'Lampu sein', 15000, '', 100),
+(11, NULL, 'Minyak rem', 25900, '', 100);
 
 -- --------------------------------------------------------
 
@@ -493,19 +510,19 @@ ALTER TABLE `brand_types`
 -- AUTO_INCREMENT for table `carts`
 --
 ALTER TABLE `carts`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `cart_items`
 --
 ALTER TABLE `cart_items`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `items`
 --
 ALTER TABLE `items`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `services`

@@ -7,7 +7,8 @@ class M_base extends CI_Model {
 		return $this->db->get_where($table_name, $where)->row();
 	}
 
-	function getListWhere($table_name, $where){		
+	function getListWhere($table_name, $where, $order = 'desc'){
+		$this->db->order_by('id', $order);		
 		return $this->db->get_where($table_name, $where)->result();
 	}
 

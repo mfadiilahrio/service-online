@@ -11,6 +11,7 @@ class Bookingservice extends CI_Controller {
 		
 		$this->load->model('m_base');
 		$this->load->model('m_cart');
+		$this->load->model('m_bankaccount');
 		$this->timeStamp = date('Y-m-d H:i:s', time());
 	}
 
@@ -19,7 +20,8 @@ class Bookingservice extends CI_Controller {
 		$data['success'] = $this->session->flashdata('success');
 		$data['error'] = $this->session->flashdata('error');
 
-		$data['records'] = $this->m_base->getListWhere('services', array());
+		$data['brands'] = $this->m_base->getListWhere('brands', array(), 'asc');
+		$data['booking_cart_total'] = $this->m_cart->getTotalBookingCartItems($this->session->userdata('user_id'));
 
 		$data['page_name'] = $this->page_name;
 		$this->header();
@@ -27,12 +29,62 @@ class Bookingservice extends CI_Controller {
 		$this->footer();
 	}
 
+	public function completebooking()
+	{
+		$data['success'] = $this->session->flashdata('success');
+		$data['error'] = $this->session->flashdata('error');
+
+		$data['areas'] = $this->m_base->getListWhere('areas', array());
+		$data['bank_accounts'] = $this->m_bankaccount->getBankAccounts(array());
+
+		$data['page_name'] = $this->page_name;
+		$this->header();
+		$this->load->view('booking/complete_booking', $data);
+		$this->footer();
+	}
+
+	public function getbrandtypebybrandid()
+	{
+		$data = $this->m_base->getListWhere(
+			'brand_types',
+			array(
+				'brand_id' => $this->input->get('brand_id')
+			)
+		);
+
+		echo json_encode($data);
+	}
+
+	public function getitemsbybrandtypeid()
+	{
+		$items = $this->m_base->getListWhere(
+			'items',
+			array(
+				'brand_type_id' => $this->input->get('brand_type_id')
+			)
+		);
+
+		$common_items = $this->m_base->getListWhere(
+			'items',
+			array(
+				'brand_type_id' => NULL
+			)
+		);
+
+		$merged_items = array_merge($items, $common_items);
+
+		echo json_encode($merged_items);
+	}
+
 	public function header()
 	{
-		$data = array();
+		if($this->session->userdata('id') == null){
+			redirect(base_url("auth"));
+		}
 
 		if($this->session->userdata('user_id') != null){
 			$data['cart_total'] = $this->m_cart->getTotalCartItems($this->session->userdata('user_id'));
+			$data['booking_cart_total'] = $this->m_cart->getTotalBookingCartItems($this->session->userdata('user_id'));
 		}
 		
 		$this->load->view('templates/header', $data);

@@ -134,12 +134,20 @@
         </div>
       </li>
       <!-- Notifications Dropdown Menu -->
-      <?php if ($this->session->userdata('user_type') == 'customer') : ?>
+      <?php if ($this->session->userdata('user_type')) : ?>
       <li class="nav-item dropdown">
-        <a class="nav-link" href="<?= base_url("cart") ?>">
+        <a class="nav-link" href="<?= base_url("cart?type=shopping") ?>">
           <i class="fas fa-shopping-cart"></i>
-          <span class="badge badge-warning navbar-badge">
+          <span class="badge badge-warning navbar-badge" id="cart_total">
             <?= (isset($cart_total->qty)) ? $cart_total->qty : "0" ?>
+          </span>
+        </a>
+      </li>
+      <li class="nav-item dropdown">
+        <a class="nav-link" href="<?= base_url("cart?type=booking") ?>">
+          <i class="fas fa-cogs"></i>
+          <span class="badge badge-warning navbar-badge" id="booking_cart_total">
+            <?= (isset($booking_cart_total->qty)) ? $booking_cart_total->qty : "0" ?>
           </span>
         </a>
       </li>
@@ -222,6 +230,35 @@
               </li>
             </ul>
           </li>
+          <li class="nav-item main-nav">
+            <a href="#" class="nav-link">
+              <i class="nav-icon fas fa-headset"></i>
+              <p>
+                Bantuan
+                <i class="right fas fa-angle-left"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="https://api.whatsapp.com/send?phone=+6282125207042" class="nav-link" target="_blank">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Cara Belanja</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="https://api.whatsapp.com/send?phone=+6282125207042" class="nav-link" target="_blank">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Cara Booking</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="https://api.whatsapp.com/send?phone=+6282125207042" class="nav-link" target="_blank">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Hubungi CS</p>
+                </a>
+              </li>
+            </ul>
+          </li> 
           <?php if ($this->session->userdata('user_type') == 'admin') : ?>
           <li class="nav-item main-nav">
             <a href="#" class="nav-link">
@@ -281,7 +318,7 @@
               </p>
             </a>
           </li>
-        <?php endif ?>
+          <?php endif ?>
           <li class="nav-item main-nav">
             <a href="<?= base_url("auth/logout") ?>" class="nav-link">
               <i class="nav-icon fas fa-sign-out-alt"></i>

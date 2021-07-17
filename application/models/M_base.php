@@ -29,6 +29,14 @@ class M_base extends CI_Model {
 		}
 	}
 
+	function deleteData($table_name, $where){
+		if ($this->db->delete($table_name, $where)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 	function createDataWithInsertID($table_name, $data) {
 		if($this->db->insert($table_name, $data)) {
 			return$this->db->insert_id();

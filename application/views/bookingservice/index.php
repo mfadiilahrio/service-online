@@ -111,9 +111,10 @@
         </div>
       </div>
       <!-- /.container-fluid -->
-      <div id="floating-cart">
-        <i class="fa fa-cogs" id="booking-floating-cart"></i>
-        <span class="badge badge-warning navbar-badge" id="floating_booking_cart_total"><?= (isset($booking_cart_total->qty)) ? $booking_cart_total->qty : "0" ?></span>
+      <?php $booking_cart_total = (int) (isset($booking_cart_total->qty)) ? $booking_cart_total->qty : 0; ?>
+      <div id="floating-cart" <?= ($booking_cart_total > 0) ? "" : "hidden" ?>>
+        <i class="fas fa-angle-right" id="booking-floating-cart"></i>
+        <span class="badge badge-warning navbar-badge" id="floating_booking_cart_total"><?= $booking_cart_total ?></span>
       </div>
     </section>
     <!-- /.content -->
@@ -122,7 +123,7 @@
   <script type="text/javascript">
     $(document).ready(function() {
       $('#floating-cart').on( "click", function() {
-        window.location.href = "<?= base_url('bookingservice/completebooking') ?>";
+        window.location.href = "<?= base_url('cart?type=booking') ?>";
       });
 
       $('#brand_id').change(function(e) {
@@ -213,6 +214,9 @@
           if (resultData.error != null) {
             window.alert(resultData.error);
           } else {
+            if (resultData.result.qty > 0) {
+              $('#floating-cart').removeAttr('hidden');
+            }
             $('#booking_cart_total').text(resultData.result.qty);
             $('#floating_booking_cart_total').text(resultData.result.qty);
           }

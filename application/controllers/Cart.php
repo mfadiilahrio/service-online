@@ -19,7 +19,12 @@ class Cart extends CI_Controller {
 		$data['success'] = $this->session->flashdata('success');
 		$data['error'] = $this->session->flashdata('error');
 
-		$data['carts'] = $this->m_base->getListWhere('carts', array());
+		$type = $this->input->get('type');
+
+		$data['areas'] = $this->m_base->getListWhere('areas', array());
+		$data['records'] = $this->m_cart->getData($this->session->userdata('id'), $type);
+
+		$data['subtotal'] = $this->getcartsubtotal($type);
 
 		$data['page_name'] = $this->page_name;
 		$this->header();
@@ -110,6 +115,66 @@ class Cart extends CI_Controller {
 		} else {
 			return $this->m_cart->getTotalBookingCartItems($this->session->userdata('user_id'));
 		}
+	}
+
+	public function updatebookingitem() {
+		$id = $this->input->post('id');
+		$type = $this->input->post('type');
+		$type_update = $this->input->post('type_update');
+
+		$cart_item = $this->m_base->getWhere('cart_items', array('id' => $id));
+
+		if ($id != null && $type != null && $type_update != null) {
+			if ($type_update == 'decrease' && $cart_item->qty < 2) {
+				echo json_encode(array('error' => 'Minimum kuantitas adalah 1'));
+			} else {
+				if ($this->m_cart->updateQty($type_update, 'id', $id)) {
+					$result = array(
+						'subtotal' => $this->getcartsubtotal($type), 
+						'cartItem' => $this->m_base->getWhere('cart_items', array('id' => $id))
+					);
+
+					echo json_encode(array(
+						'message' => 'Sukses update qty', 
+						'result' => $result
+					));
+				} else {
+					echo json_encode(array('error' => 'Error saat mengupdate qty'));
+				}
+			}
+		} else {
+			echo json_encode(array('error' => 'Request kosong, error saat mengupdate qty'));
+		}
+	}
+
+	public function deletecartitem() {
+		$id = $this->input->post('id');
+		$type = $this->input->post('type');
+
+		if ($id != null && $type != null) {
+			if ($this->m_base->deleteData('cart_items', array('id' => $id))) {
+				echo json_encode(array(
+					'message' => 'Sukses menambahkan ke keranjang', 
+					'result' => $this->getcartsubtotal($type)
+				));
+			} else {
+				echo json_encode(array('error' => 'Error saat menghapus dari keranjang'));
+			}
+		} else {
+			echo json_encode(array('error' => 'Error saat menghapus dari keranjang'));
+		}
+	}
+
+	public function getcartsubtotal($type) {
+		$data = $this->m_cart->getData($this->session->userdata('id'), $type);
+
+		$subtotal = 0;
+
+		foreach ($data as $record) {
+			$subtotal = $subtotal + ($record->price * $record->qty);
+		}
+
+		return number_format($subtotal, 0, ",", ".");
 	}
 
 	public function header()

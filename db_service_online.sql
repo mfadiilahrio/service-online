@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:8889
--- Generation Time: Jul 16, 2021 at 09:35 PM
+-- Generation Time: Jul 17, 2021 at 02:20 PM
 -- Server version: 5.7.26
 -- PHP Version: 5.6.40
 
@@ -216,7 +216,9 @@ CREATE TABLE `carts` (
 
 INSERT INTO `carts` (`id`, `user_id`, `type`, `status`) VALUES
 (1, 2, 'shopping', 0),
-(2, 2, 'booking', 1);
+(2, 2, 'booking', 0),
+(3, 2, 'shopping', 1),
+(4, 2, 'booking', 1);
 
 -- --------------------------------------------------------
 
@@ -238,13 +240,19 @@ CREATE TABLE `cart_items` (
 INSERT INTO `cart_items` (`id`, `cart_id`, `item_id`, `qty`) VALUES
 (1, 1, 1, 1),
 (2, 1, 2, 1),
-(3, 2, 1, 7),
-(4, 2, 2, 4),
+(3, 2, 1, 1),
+(4, 2, 2, 2),
 (5, 2, 5, 4),
 (6, 2, 11, 2),
-(7, 2, 7, 4),
+(7, 2, 7, 1),
 (8, 2, 10, 1),
-(9, 2, 8, 3);
+(9, 2, 8, 1),
+(10, 3, 5, 2),
+(11, 3, 10, 1),
+(12, 2, 9, 1),
+(13, 2, 6, 1),
+(34, 4, 5, 2),
+(35, 4, 11, 2);
 
 -- --------------------------------------------------------
 
@@ -510,13 +518,13 @@ ALTER TABLE `brand_types`
 -- AUTO_INCREMENT for table `carts`
 --
 ALTER TABLE `carts`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `cart_items`
 --
 ALTER TABLE `cart_items`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
 
 --
 -- AUTO_INCREMENT for table `items`

@@ -14,7 +14,6 @@
             </ol>
           </div>
         </div>
-      </div><!-- /.container-fluid -->
     </section>
     <!-- Main content -->
     <section class="content">
@@ -57,7 +56,7 @@
                 </p>
               </div>
             </div>
-            <form action="<?= base_url("supply/update") ?>" method="POST" enctype="multipart/form-data">
+            <form action="<?= base_url("booking/update") ?>" method="POST" enctype="multipart/form-data">
               <div class="row">
                 <div class="col-md-6">
                   <div class="form-group">

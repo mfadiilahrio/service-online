@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:8889
--- Generation Time: Jul 17, 2021 at 02:20 PM
+-- Generation Time: Jul 17, 2021 at 05:37 PM
 -- Server version: 5.7.26
 -- PHP Version: 5.6.40
 
@@ -124,14 +124,6 @@ CREATE TABLE `bookings` (
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---
--- Dumping data for table `bookings`
---
-
-INSERT INTO `bookings` (`id`, `user_id`, `service_id`, `workshop_id`, `area_id`, `mechanic_id`, `complaint`, `date`, `address`, `other_cost`, `other_cost_note`, `booking_status`, `bank_account_id`, `payment_url`, `created_at`) VALUES
-(10001, 2, 1, 1, 1, NULL, 'Kampas rem abis', '2021-07-10 08:00:00', 'Taman alamanda blok G.11 No.29 RT/RW 002/RW022 Ds. Karang Satria Kec. Tambun Utara Kab. Bekasi 17510', 50000, 'Biaya pasang', 'waiting_confirmation', NULL, NULL, '2021-07-10 10:03:32'),
-(10002, 2, 1, 1, 1, NULL, 'Ganti oli', '2021-07-10 14:00:00', 'Taman alamanda blok G.11 No.29 RT/RW 002/RW022 Ds. Karang Satria Kec. Tambun Utara Kab. Bekasi 17510', 50000, 'Biaya pasang', 'waiting_confirmation', NULL, NULL, '2021-07-15 02:57:39');
-
 -- --------------------------------------------------------
 
 --
@@ -145,15 +137,6 @@ CREATE TABLE `bookings_items` (
   `price` bigint(20) NOT NULL,
   `qty` int(11) NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Dumping data for table `bookings_items`
---
-
-INSERT INTO `bookings_items` (`id`, `booking_id`, `item_id`, `price`, `qty`) VALUES
-(1, 10001, 1, 40000, 1),
-(2, 10001, 2, 50000, 1),
-(3, 10002, 5, 42900, 1);
 
 -- --------------------------------------------------------
 
@@ -215,10 +198,7 @@ CREATE TABLE `carts` (
 --
 
 INSERT INTO `carts` (`id`, `user_id`, `type`, `status`) VALUES
-(1, 2, 'shopping', 0),
-(2, 2, 'booking', 0),
-(3, 2, 'shopping', 1),
-(4, 2, 'booking', 1);
+(5, 2, 'booking', 1);
 
 -- --------------------------------------------------------
 
@@ -238,21 +218,8 @@ CREATE TABLE `cart_items` (
 --
 
 INSERT INTO `cart_items` (`id`, `cart_id`, `item_id`, `qty`) VALUES
-(1, 1, 1, 1),
-(2, 1, 2, 1),
-(3, 2, 1, 1),
-(4, 2, 2, 2),
-(5, 2, 5, 4),
-(6, 2, 11, 2),
-(7, 2, 7, 1),
-(8, 2, 10, 1),
-(9, 2, 8, 1),
-(10, 3, 5, 2),
-(11, 3, 10, 1),
-(12, 2, 9, 1),
-(13, 2, 6, 1),
-(34, 4, 5, 2),
-(35, 4, 11, 2);
+(43, 5, 10, 1),
+(45, 5, 8, 9);
 
 -- --------------------------------------------------------
 
@@ -339,6 +306,7 @@ CREATE TABLE `users` (
   `name` varchar(100) DEFAULT NULL,
   `phone` varchar(20) DEFAULT NULL,
   `address` varchar(255) DEFAULT NULL,
+  `postal_code` int(5) DEFAULT NULL,
   `dob` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -346,12 +314,13 @@ CREATE TABLE `users` (
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `name`, `phone`, `address`, `dob`) VALUES
-(1, 'Admin', '082125207042', 'Bekasi Utara', '1111-01-01'),
-(2, 'M Fadhilah Rio Bagus Saputro', '089529037444', 'Taman alamanda blok G.11 No.29 RT/RW 002/RW022 Ds. Karang Satria Kec. Tambun Utara Kab. Bekasi 17510', '1998-05-08'),
-(3, 'Berto', '082111111111', 'Bekasi', '1997-07-01'),
-(4, NULL, NULL, NULL, NULL),
-(5, NULL, NULL, NULL, NULL);
+INSERT INTO `users` (`id`, `name`, `phone`, `address`, `postal_code`, `dob`) VALUES
+(1, 'Admin', '082125207042', 'Bekasi Utara', NULL, '1111-01-01'),
+(2, 'M Fadhilah Rio Bagus Saputro', '0895-2903-7444', 'Perumahan Taman Alamanda Blok G11 No.29 Rt 002 RW 022 Tambun Utara', 17510, '1998-05-08'),
+(3, 'Berto', '082111111111', 'Bekasi', NULL, '1997-07-01'),
+(4, NULL, NULL, NULL, NULL, NULL),
+(5, NULL, NULL, NULL, NULL, NULL),
+(6, 'M Fadhilah Rio Bagus Saputroo', '0895-2903-7444', 'Perumahan Taman Alamanda Blok G11 No.29 Rt 002 RW 022 Tambun Utara', 17510, '1998-05-08');
 
 -- --------------------------------------------------------
 
@@ -518,13 +487,13 @@ ALTER TABLE `brand_types`
 -- AUTO_INCREMENT for table `carts`
 --
 ALTER TABLE `carts`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `cart_items`
 --
 ALTER TABLE `cart_items`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=46;
 
 --
 -- AUTO_INCREMENT for table `items`
@@ -548,4 +517,4 @@ ALTER TABLE `transportation_types`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;

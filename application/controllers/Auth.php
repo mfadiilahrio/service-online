@@ -60,6 +60,7 @@ class Auth extends CI_Controller {
 					'name'     	=> $user->name,
 					'phone' 	=> $user->phone,
 					'address'	=> $user->address,
+					'postal_code'	=> $user->postal_code,
 					'dob'		=> $user->dob,
 					'user_type' => $auth->user_type
 				);

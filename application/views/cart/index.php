@@ -1,3 +1,10 @@
+  <?php
+    if ($this->session->userdata("address") != '' && $this->session->userdata("address") != null) {
+      $is_empty_address = false;
+    } else {
+      $is_empty_address = true;
+    }
+  ?>
   <style type="text/css">
     .qty:hover {
       cursor: pointer;
@@ -106,9 +113,16 @@
                     </div>
                   </div>
                 </div>
-                <div class="callout callout-info">
+                <div class="callout <?= ($is_empty_address) ? 'callout-danger' : 'callout-info' ?>">
                   <h6><i class="fas fa-info"></i> Alamat:</h6>
-                  <?= $this->session->userdata("address") ?>
+                  <?php 
+                    if ($is_empty_address == false) { 
+                      echo $this->session->userdata("address") ;
+                    } else { 
+                      echo 'Mohon isi alamat terlebih dahulu';
+                      echo '<div class="row"><a href="'. base_url('profile') .'" role="button" class="btn btn-sm btn-outline-secondary btn-block mt-3">Isi Alamat</a></div>';
+                    }
+                  ?>
                 </div>
                 <form action="">
                   <div class="row">
@@ -153,7 +167,7 @@
                   </div>
                   <div class="row">
                     <div class="col-md-12">
-                      <button type="submit" id="create-booking" class="btn btn-outline-primary btn-block" <?= (count($records) < 1) ? 'hidden' : '' ?>>Buat Booking</button>
+                      <button type="submit" id="create-booking" class="btn btn-outline-primary btn-block" <?= (count($records) < 1 || $is_empty_address) ? 'hidden' : '' ?>>Buat Booking</button>
                     </div>
                   </div>
                 </form>

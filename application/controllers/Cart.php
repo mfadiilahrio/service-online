@@ -117,7 +117,7 @@ class Cart extends CI_Controller {
 		}
 	}
 
-	public function updatebookingitem() {
+	public function updatecartitem() {
 		$id = $this->input->post('id');
 		$type = $this->input->post('type');
 		$type_update = $this->input->post('type_update');
@@ -131,7 +131,9 @@ class Cart extends CI_Controller {
 				if ($this->m_cart->updateQty($type_update, 'id', $id)) {
 					$result = array(
 						'subtotal' => $this->getcartsubtotal($type), 
-						'cartItem' => $this->m_base->getWhere('cart_items', array('id' => $id))
+						'cartItem' => $this->m_base->getWhere('cart_items', array('id' => $id)),
+						'bookingCartTotal' => $this->getcarttotalbytype('booking'),
+						'cartTotal' => $this->getcarttotalbytype('shopping')
 					);
 
 					echo json_encode(array(
@@ -153,9 +155,15 @@ class Cart extends CI_Controller {
 
 		if ($id != null && $type != null) {
 			if ($this->m_base->deleteData('cart_items', array('id' => $id))) {
+				$result = array(
+					'subtotal' => $this->getcartsubtotal($type),
+					'bookingCartTotal' => $this->getcarttotalbytype('booking'),
+					'cartTotal' => $this->getcarttotalbytype('shopping')
+				);
+
 				echo json_encode(array(
 					'message' => 'Sukses menambahkan ke keranjang', 
-					'result' => $this->getcartsubtotal($type)
+					'result' => $result
 				));
 			} else {
 				echo json_encode(array('error' => 'Error saat menghapus dari keranjang'));

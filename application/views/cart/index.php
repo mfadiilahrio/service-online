@@ -61,11 +61,11 @@
                             <p class="text text-secondary"><?= "Rp " . number_format($record->price, 0, ",", ".") ?></p>
                             <div class="form-group" style="width:100px">
                               <div class="input-group input-group-sm">
-                                <div class="input-group-prepend" onclick="updateBookingItem(<?= $record->id ?>, 'decrease')">
+                                <div class="input-group-prepend" onclick="updateCartItem(<?= $record->id ?>, 'decrease')">
                                   <button type="button" class="btn btn-outline-danger"><i class="fa fa-minus"></i></button>
                                 </div>
                                 <input type="text" id="qty-<?= $record->id ?>" class="form-control input-number" value="<?= $record->qty ?>" min="1" max="100" readonly/>
-                                <div class="input-group-append" onclick="updateBookingItem(<?= $record->id ?>, 'increase')">
+                                <div class="input-group-append" onclick="updateCartItem(<?= $record->id ?>, 'increase')">
                                   <button type="button" class="btn btn-outline-info"><i class="fa fa-plus"></i></button>
                                 </div>
                               </div>
@@ -73,7 +73,7 @@
                           </div>
                         </div>
                         <div class="card-footer">
-                          <button type="button" class="btn btn-outline-secondary btn-sm float-right" onclick="deleteBookingItem(<?= $record->id ?>, 'decrease')"><i class="fa fa-trash"></i></button>
+                          <button type="button" class="btn btn-outline-secondary btn-sm float-right" onclick="deleteCartItem(<?= $record->id ?>, 'decrease')"><i class="fa fa-trash"></i></button>
                         </div>
                       </div>
                     </div>
@@ -170,17 +170,19 @@
   </div>
   <!-- /.content-wrapper -->
   <script type="text/javascript">
-    function updateBookingItem(id, type_update) {
+    function updateCartItem(id, type_update) {
+
+      var urlParams = new URLSearchParams(window.location.search);
 
       var data = {
-        'type':'booking',
-        'id':id,
-        'type_update':type_update
+        'type': urlParams.get('type'),
+        'id': id,
+        'type_update': type_update
       }
 
       $.ajax({
         type: 'POST',
-        url: "<?php echo base_url("cart/updatebookingitem")?>",
+        url: "<?php echo base_url("cart/updatecartitem")?>",
         data: data,
         dataType: "json",
         success: function(resultData) { 
@@ -189,15 +191,19 @@
           } else {
             $('#subtotal').text('Rp.' + resultData.result.subtotal);
             $('#qty-' + id).val(resultData.result.cartItem.qty);
+            $('#booking_cart_total').text(resultData.result.bookingCartTotal.qty);
+            $('#cart_total').text(resultData.result.cartTotal.qty);
           }
         }
       });
     }
 
-    function deleteBookingItem(id) {
+    function deleteCartItem(id) {
+      var urlParams = new URLSearchParams(window.location.search);
+
       var data = {
-        'type':'booking',
-        'id':id
+        'type': urlParams.get('type'),
+        'id': id
       }
 
       $.ajax({
@@ -209,12 +215,14 @@
           if (resultData.error != null) {
             window.alert(resultData.error);
           } else {
-            if (resultData.result == "0") {
+            if (resultData.result.subtotal == "0") {
               $('#create-booking').attr('hidden', true);
             }
 
-            $('#subtotal').text('Rp.' + resultData.result);
+            $('#subtotal').text('Rp.' + resultData.result.subtotal);
             $('#item-' + id).remove();
+            $('#booking_cart_total').text(resultData.result.bookingCartTotal.qty);
+            $('#cart_total').text(resultData.result.cartTotal.qty);
           }
         }
       });

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:8889
--- Generation Time: Jul 17, 2021 at 05:37 PM
+-- Generation Time: Jul 18, 2021 at 11:46 PM
 -- Server version: 5.7.26
 -- PHP Version: 5.6.40
 
@@ -77,8 +77,9 @@ CREATE TABLE `banks` (
 --
 
 INSERT INTO `banks` (`id`, `name`) VALUES
-(1, 'BCA'),
-(2, 'Mandiri');
+(1, 'Cash'),
+(2, 'BCA'),
+(3, 'Mandiri');
 
 -- --------------------------------------------------------
 
@@ -89,7 +90,7 @@ INSERT INTO `banks` (`id`, `name`) VALUES
 CREATE TABLE `bank_accounts` (
   `id` int(11) NOT NULL,
   `bank_id` int(11) NOT NULL,
-  `account_number` int(11) NOT NULL
+  `account_number` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -97,8 +98,9 @@ CREATE TABLE `bank_accounts` (
 --
 
 INSERT INTO `bank_accounts` (`id`, `bank_id`, `account_number`) VALUES
-(1, 1, 11111111),
-(2, 2, 2222222);
+(1, 1, NULL),
+(2, 2, 2222222),
+(3, 3, 2222222);
 
 -- --------------------------------------------------------
 
@@ -116,27 +118,44 @@ CREATE TABLE `bookings` (
   `complaint` text NOT NULL,
   `date` datetime NOT NULL,
   `address` varchar(255) NOT NULL,
+  `postal_code` int(5) NOT NULL,
   `other_cost` bigint(20) DEFAULT NULL,
   `other_cost_note` text,
-  `booking_status` enum('waiting_confirmation','confirmed','booking','process','shipped','waiting_payment','checking_payment','completed','canceled') NOT NULL DEFAULT 'waiting_confirmation',
+  `booking_status` enum('waiting_confirmation','confirmed','booking','process','shipped','waiting_payment','checking_payment','completed','canceled') NOT NULL DEFAULT 'waiting_confirmation' COMMENT '**Untuk booking urutan statusnya** 1. waiting_confirmation 2. confirmed   3. booking 4. process 5. waiting_payment 6. checking_payment 7. completed  **Untuk shopping urutan statusnya** 1. waiting_confirmation 2. confirmed   3. waiting_payment 4. checking_payment 5. process 6. shipped 7. completed ',
   `bank_account_id` int(11) DEFAULT NULL,
+  `awb_number` varchar(100) DEFAULT NULL,
   `payment_url` varchar(255) DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--
+-- Dumping data for table `bookings`
+--
+
+INSERT INTO `bookings` (`id`, `user_id`, `service_id`, `workshop_id`, `area_id`, `mechanic_id`, `complaint`, `date`, `address`, `postal_code`, `other_cost`, `other_cost_note`, `booking_status`, `bank_account_id`, `awb_number`, `payment_url`, `created_at`) VALUES
+(10011, 2, 2, 1, 5, 3, 'Lampu sein mati', '2021-07-19 04:35:00', 'Perumahan Taman Alamanda Blok G11 No.29 Rt 002 RW 022 Tambun Utara', 17510, 25000, 'Perbaikan kabel', 'completed', 1, NULL, NULL, '2021-07-18 21:35:23');
+
 -- --------------------------------------------------------
 
 --
--- Table structure for table `bookings_items`
+-- Table structure for table `booking_items`
 --
 
-CREATE TABLE `bookings_items` (
+CREATE TABLE `booking_items` (
   `id` int(11) NOT NULL,
   `booking_id` int(11) NOT NULL,
   `item_id` int(11) NOT NULL,
   `price` bigint(20) NOT NULL,
   `qty` int(11) NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `booking_items`
+--
+
+INSERT INTO `booking_items` (`id`, `booking_id`, `item_id`, `price`, `qty`) VALUES
+(9, 10011, 10, 15000, 2),
+(10, 10011, 5, 45000, 1);
 
 -- --------------------------------------------------------
 
@@ -198,7 +217,7 @@ CREATE TABLE `carts` (
 --
 
 INSERT INTO `carts` (`id`, `user_id`, `type`, `status`) VALUES
-(5, 2, 'booking', 1);
+(12, 2, 'booking', 0);
 
 -- --------------------------------------------------------
 
@@ -218,8 +237,8 @@ CREATE TABLE `cart_items` (
 --
 
 INSERT INTO `cart_items` (`id`, `cart_id`, `item_id`, `qty`) VALUES
-(43, 5, 10, 1),
-(45, 5, 8, 9);
+(72, 12, 10, 2),
+(73, 12, 5, 1);
 
 -- --------------------------------------------------------
 
@@ -245,13 +264,14 @@ INSERT INTO `items` (`id`, `brand_type_id`, `name`, `price`, `image_url`, `qty`)
 (2, 1, 'Kampas rem belakang', 60000, '', 100),
 (3, 2, 'Kampas rem depan', 40000, '', 100),
 (4, 2, 'Kampas rem belakang', 50000, '', 100),
-(5, NULL, 'Pertamina Enduro Matic, 10W-30, API SL, JASO MB 0.8L 1pc', 42900, 'assets/images/item_5.png', 50),
+(5, NULL, 'Pertamina Enduro Matic, 10W-30, API SL, JASO MB 0.8L 1pc', 45000, 'assets/images/item_5.png', 99),
 (6, 1, 'Filter udara', 85000, '', 100),
 (7, 1, 'Lampu depan', 25900, '', 100),
 (8, 1, 'Kampas rem belakang', 60000, '', 100),
 (9, 1, 'Lampu belakang', 26000, '', 100),
-(10, 1, 'Lampu sein', 15000, '', 100),
-(11, NULL, 'Minyak rem', 25900, '', 100);
+(10, 1, 'Lampu sein', 15000, '', 98),
+(11, NULL, 'Minyak rem', 25900, '', 100),
+(12, 1, 'Handle rem', 110000, '', 100);
 
 -- --------------------------------------------------------
 
@@ -317,7 +337,7 @@ CREATE TABLE `users` (
 INSERT INTO `users` (`id`, `name`, `phone`, `address`, `postal_code`, `dob`) VALUES
 (1, 'Admin', '082125207042', 'Bekasi Utara', NULL, '1111-01-01'),
 (2, 'M Fadhilah Rio Bagus Saputro', '0895-2903-7444', 'Perumahan Taman Alamanda Blok G11 No.29 Rt 002 RW 022 Tambun Utara', 17510, '1998-05-08'),
-(3, 'Berto', '082111111111', 'Bekasi', NULL, '1997-07-01'),
+(3, 'Berto', '082111111111', 'Harapan Jaya Bekasi Utara', 17510, '1997-07-01'),
 (4, NULL, NULL, NULL, NULL, NULL),
 (5, NULL, NULL, NULL, NULL, NULL),
 (6, 'M Fadhilah Rio Bagus Saputroo', '0895-2903-7444', 'Perumahan Taman Alamanda Blok G11 No.29 Rt 002 RW 022 Tambun Utara', 17510, '1998-05-08');
@@ -333,8 +353,16 @@ CREATE TABLE `workshops` (
   `area_id` int(11) NOT NULL,
   `name` varchar(50) NOT NULL,
   `phone` varchar(20) NOT NULL,
-  `address` varchar(255) NOT NULL
+  `address` varchar(255) NOT NULL,
+  `postal_code` int(5) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `workshops`
+--
+
+INSERT INTO `workshops` (`id`, `area_id`, `name`, `phone`, `address`, `postal_code`) VALUES
+(1, 1, 'Cabang Bekasi', '0821-2520-7042', 'Harapan Jaya, Bekasi Utara', 17124);
 
 --
 -- Indexes for dumped tables
@@ -372,9 +400,9 @@ ALTER TABLE `bookings`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `bookings_items`
+-- Indexes for table `booking_items`
 --
-ALTER TABLE `bookings_items`
+ALTER TABLE `booking_items`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -451,25 +479,25 @@ ALTER TABLE `auth`
 -- AUTO_INCREMENT for table `banks`
 --
 ALTER TABLE `banks`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `bank_accounts`
 --
 ALTER TABLE `bank_accounts`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `bookings`
 --
 ALTER TABLE `bookings`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10003;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10012;
 
 --
--- AUTO_INCREMENT for table `bookings_items`
+-- AUTO_INCREMENT for table `booking_items`
 --
-ALTER TABLE `bookings_items`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+ALTER TABLE `booking_items`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `brands`
@@ -487,19 +515,19 @@ ALTER TABLE `brand_types`
 -- AUTO_INCREMENT for table `carts`
 --
 ALTER TABLE `carts`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `cart_items`
 --
 ALTER TABLE `cart_items`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=46;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=74;
 
 --
 -- AUTO_INCREMENT for table `items`
 --
 ALTER TABLE `items`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `services`
@@ -518,3 +546,9 @@ ALTER TABLE `transportation_types`
 --
 ALTER TABLE `users`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
+-- AUTO_INCREMENT for table `workshops`
+--
+ALTER TABLE `workshops`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;

@@ -29,20 +29,6 @@ class Bookingservice extends CI_Controller {
 		$this->footer();
 	}
 
-	public function completebooking()
-	{
-		$data['success'] = $this->session->flashdata('success');
-		$data['error'] = $this->session->flashdata('error');
-
-		$data['areas'] = $this->m_base->getListWhere('areas', array());
-		$data['bank_accounts'] = $this->m_bankaccount->getBankAccounts(array());
-
-		$data['page_name'] = $this->page_name;
-		$this->header();
-		$this->load->view('booking/complete_booking', $data);
-		$this->footer();
-	}
-
 	public function getbrandtypebybrandid()
 	{
 		$data = $this->m_base->getListWhere(

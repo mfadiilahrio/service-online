@@ -11,6 +11,7 @@ class Cart extends CI_Controller {
 		
 		$this->load->model('m_base');
 		$this->load->model('m_cart');
+		$this->load->model('m_bankaccount');
 		$this->timeStamp = date('Y-m-d H:i:s', time());
 	}
 
@@ -18,11 +19,27 @@ class Cart extends CI_Controller {
 	{
 		$data['success'] = $this->session->flashdata('success');
 		$data['error'] = $this->session->flashdata('error');
+		$data['message'] = $this->session->flashdata('message');
 
 		$type = $this->input->get('type');
 
 		$data['areas'] = $this->m_base->getListWhere('areas', array());
+		$data['bank_accounts'] = $this->m_bankaccount->getBankAccounts(array());
 		$data['records'] = $this->m_cart->getData($this->session->userdata('id'), $type);
+
+		$data['hide_content'] = true;
+
+		if ($type == 'shopping') {
+			$cart_total = $this->m_cart->getTotalCartItems($this->session->userdata('user_id'));
+			if ($cart_total->qty > 0) {
+				$data['hide_content'] = false; 
+			}
+		} else {
+			$booking_cart_total = $this->m_cart->getTotalBookingCartItems($this->session->userdata('user_id'));
+			if ($booking_cart_total->qty > 0) {
+				$data['hide_content'] = false; 
+			}
+		}
 
 		$data['subtotal'] = $this->getcartsubtotal($type);
 
@@ -155,10 +172,26 @@ class Cart extends CI_Controller {
 
 		if ($id != null && $type != null) {
 			if ($this->m_base->deleteData('cart_items', array('id' => $id))) {
+				
+				$hide_content = true;
+
+				if ($type == 'shopping') {
+					$cart_total = $this->m_cart->getTotalCartItems($this->session->userdata('user_id'));
+					if ($cart_total->qty > 0) {
+						$hide_content = false; 
+					}
+				} else {
+					$booking_cart_total = $this->m_cart->getTotalBookingCartItems($this->session->userdata('user_id'));
+					if ($booking_cart_total->qty > 0) {
+						$hide_content = false; 
+					}
+				}
+
 				$result = array(
 					'subtotal' => $this->getcartsubtotal($type),
 					'bookingCartTotal' => $this->getcarttotalbytype('booking'),
-					'cartTotal' => $this->getcarttotalbytype('shopping')
+					'cartTotal' => $this->getcarttotalbytype('shopping'),
+					'hideContent' => $hide_content
 				);
 
 				echo json_encode(array(

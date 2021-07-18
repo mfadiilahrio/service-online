@@ -3,9 +3,20 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class M_cart extends CI_Model {
 
+	function nonactivateCarts($data, $user_id, $type) {
+		$this->db->where('user_id', $user_id);
+		$this->db->where('type', $type);
+		if($this->db->update('carts', $data)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 	function getData($user_id, $type) {
 		$this->db->select('
 			cart_items.*, 
+			items.id as item_id, 
 			items.name, 
 			items.price, 
 			items.image_url, 

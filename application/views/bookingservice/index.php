@@ -219,6 +219,17 @@
             }
             $('#booking_cart_total').text(resultData.result.qty);
             $('#floating_booking_cart_total').text(resultData.result.qty);
+
+            Swal.fire({
+              toast: true,
+              icon: 'success',
+              showCloseButton: true,
+              position: 'top-end',
+              showConfirmButton: false,
+              title: '&nbsp;&nbsp;&nbsp;Berhasil!',
+              text: resultData.message,
+              timer: 3000
+            })
           }
         }
       });

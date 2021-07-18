@@ -31,15 +31,23 @@
     <!-- Main content -->
     <section class="content">
       <div class="container-fluid">
-        <?php if($error != null or $error != '') { ?>
+        <?php if($message != null or $message != '') { ?>
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
-          <?= $error; ?>
+          <?= $message; ?>
           <button type="button" class="close" data-dismiss="alert" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
         <?php } ?>
-        <div class="row">
+        <?php if($error != null or $error != '') { ?>
+          <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <?= $error; ?>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+        <?php } ?>
+        <div class="row" id="cart-content" <?= ($hide_content) ? 'hidden' : '' ?>>
           <div class="col-sm-9">
             <!-- card -->
             <div class="card card-default">
@@ -124,12 +132,12 @@
                     }
                   ?>
                 </div>
-                <form action="">
+                <form action="booking/createbooking" method="POST" enctype="multipart/form-data">
                   <div class="row">
                     <div class="col-md-12">
                       <div class="form-group">
                         <label>Area</label>
-                        <select name="product_id" class="form-control select2bs4" style="width: 100%;" required>
+                        <select name="area_id" class="form-control select2bs4" style="width: 100%;" required>
                           <option>--Pilih Area--</option>
                           <?php 
                           foreach ($areas as $data) {
@@ -137,6 +145,7 @@
                           }
                           ?>
                         </select>
+                        <input type="hidden" name="type" value="<?= $this->input->get('type') ?>">
                       </div>
                       <div class="form-group">
                         <label>Keluhan</label>
@@ -145,7 +154,7 @@
                       <div class="form-group">
                         <label>Tanggal</label>
                         <div class="input-group date" id="reservationdatetime" data-target-input="nearest">
-                          <input type="text" class="form-control datetimepicker-input" name="date" data-target="#reservationdatetime"/>
+                          <input type="text" class="form-control datetimepicker-input" name="date" data-target="#reservationdatetime" readonly />
                           <div class="input-group-append" data-target="#reservationdatetime" data-toggle="datetimepicker">
                             <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                           </div>
@@ -153,11 +162,11 @@
                       </div>
                       <div class="form-group">
                         <label>Metode pembayaran</label>
-                        <select name="bank_aacount_id" class="form-control select2bs4" style="width: 100%;" required>
+                        <select name="bank_account_id" class="form-control select2bs4" style="width: 100%;" required>
                           <option>--Pilih Rekening--</option>
                           <?php 
                           foreach ($bank_accounts as $data) {
-                            echo '<option value="'.$data->id.'">'.$data->name.' - '.$data->account_number.'</option>';
+                            echo '<option value="'.$data->id.'">'.$data->method_name.'</option>';
                           }
                           ?>
                         </select>
@@ -167,7 +176,7 @@
                   </div>
                   <div class="row">
                     <div class="col-md-12">
-                      <button type="submit" id="create-booking" class="btn btn-outline-primary btn-block" <?= (count($records) < 1 || $is_empty_address) ? 'hidden' : '' ?>>Buat Booking</button>
+                      <button type="submit" id="create-booking" class="btn btn-outline-primary btn-block" <?= (count($records) < 1 || $is_empty_address) ? 'hidden' : '' ?>>Buat Pesanan</button>
                     </div>
                   </div>
                 </form>
@@ -175,6 +184,14 @@
               <!-- /.card-body -->
             </div>
             <!-- /.card -->
+          </div>
+        </div>
+        <div class="row" id="empty-cart-content" <?= ($hide_content) ? '' : 'hidden' ?>>
+          <div class="card col-md-12">
+            <div class="card-body">
+              <img src="<?= base_url('assets/images/empty_cart.png') ?>" class="img-fluid mx-auto d-block" alt="Empty Cart">
+              <h1 class="text text-danger text-center mt-5">Keranjangmu kosong :(</h1>
+            </div>
           </div>
         </div>
       </div>
@@ -231,6 +248,11 @@
           } else {
             if (resultData.result.subtotal == "0") {
               $('#create-booking').attr('hidden', true);
+            }
+
+            if (resultData.result.hideContent) {
+              $('#cart-content').attr('hidden', true);
+              $('#empty-cart-content').removeAttr('hidden');
             }
 
             $('#subtotal').text('Rp.' + resultData.result.subtotal);

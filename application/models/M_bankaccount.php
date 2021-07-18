@@ -8,7 +8,14 @@ class M_bankaccount extends CI_Model {
 			bank_accounts.*,
 			banks.name');
 		$this->db->join('banks', 'banks.id = bank_accounts.bank_id', 'left');
-		return $this->db->get_where('bank_accounts', $where)->result();
+
+		$datas = $this->db->get_where('bank_accounts', $where)->result();
+
+		foreach ($datas as $data) {
+			$data->method_name = ($data->account_number != null) ? $data->name.' - '.$data->account_number : $data->name;
+		}
+
+		return $datas;
 	}
 
 }

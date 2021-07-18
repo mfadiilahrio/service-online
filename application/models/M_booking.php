@@ -9,6 +9,9 @@ class M_booking extends CI_Model {
 			u.name as user_name,
 			services.name as service_name,
 			workshops.name as workshop_name,
+			workshops.phone as workshop_phone,
+			workshops.address as workshop_address,
+			workshops.postal_code as workshop_postal_code,
 			areas.name as area_name,
 			m.name as mechanic_name,
 			banks.name as bank_name,
@@ -67,6 +70,9 @@ class M_booking extends CI_Model {
 			u.name as user_name,
 			services.name as service_name,
 			workshops.name as workshop_name,
+			workshops.phone as workshop_phone,
+			workshops.address as workshop_address,
+			workshops.postal_code as workshop_postal_code,
 			areas.name as area_name,
 			m.name as mechanic_name,
 			banks.name as bank_name,
@@ -121,6 +127,33 @@ class M_booking extends CI_Model {
 		return $datas;
 	}
 
+	function getBookingItems($id) {
+		$this->db->select('
+			booking_items.*, 
+			items.id as item_id, 
+			items.name,
+			items.image_url, 
+			brand_types.name as brand_type,
+			brands.name as brand');
+		$this->db->join('items', 'items.id = booking_items.item_id', 'left');
+		$this->db->join('brand_types', 'brand_types.id = items.brand_type_id', 'left');
+		$this->db->join('brands', 'brands.id = brand_types.brand_id', 'left');
+		$this->db->where('booking_items.booking_id', $id);
+
+		$datas = $this->db->get('booking_items')->result();
+
+		foreach ($datas as $data) {
+			if (($data->brand != null && $data->brand_type != null)) {
+				$data->brand_name = $data->brand.' '.$data->brand_type;	
+			} else {
+				$data->brand_name = '-';
+			}
+
+			$data->subtotal = $data->price * $data->qty;
+		}
+
+		return $datas;
+	}
 }
 
 /* End of file M_booking.php */

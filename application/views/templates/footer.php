@@ -1,4 +1,4 @@
-<footer class="main-footer">
+  <footer class="main-footer">
     <div class="float-right d-none d-sm-block">
       <b>Version</b> 3.1.0
     </div>
@@ -53,8 +53,6 @@
 <script src="<?= base_url('assets/plugins/toastr/toastr.min.js'); ?>"></script>
 <!-- AdminLTE App -->
 <script src="<?= base_url('assets/dist/js/adminlte.min.js'); ?>"></script>
-<!-- AdminLTE for demo purposes -->
-<script src="<?= base_url('assets/dist/js/demo.js'); ?>"></script>
 <!-- Page specific script -->
 <script>
   $(function () {
@@ -141,7 +139,7 @@
     //Date and time picker
     $('#reservationdatetime').datetimepicker({ 
       icons: { time: 'far fa-clock' },
-      format: 'YYYY-MM-DD hh:mm:ss'
+      format: 'YYYY-MM-DD HH:mm:ss'
     });
 
     //Date range picker

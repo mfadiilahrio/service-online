@@ -7,6 +7,8 @@ class M_booking extends CI_Model {
 		$this->db->select('
 			bookings.*,
 			u.name as user_name,
+			u.phone as user_phone,
+			auth.email as user_email,
 			services.name as service_name,
 			workshops.name as workshop_name,
 			workshops.phone as workshop_phone,
@@ -17,6 +19,7 @@ class M_booking extends CI_Model {
 			banks.name as bank_name,
 			bank_accounts.account_number');
 		$this->db->join('users u', 'u.id = bookings.user_id', 'left');
+		$this->db->join('auth', 'auth.user_id = u.id', 'left');
 		$this->db->join('services', 'services.id = bookings.service_id', 'left');
 		$this->db->join('workshops', 'workshops.id = bookings.workshop_id', 'left');
 		$this->db->join('areas', 'areas.id = bookings.area_id', 'left');
@@ -68,6 +71,8 @@ class M_booking extends CI_Model {
 		$this->db->select('
 			bookings.*,
 			u.name as user_name,
+			u.phone as user_phone,
+			auth.email as user_email,
 			services.name as service_name,
 			workshops.name as workshop_name,
 			workshops.phone as workshop_phone,
@@ -78,6 +83,7 @@ class M_booking extends CI_Model {
 			banks.name as bank_name,
 			bank_accounts.account_number');
 		$this->db->join('users u', 'u.id = bookings.user_id', 'left');
+		$this->db->join('auth', 'auth.user_id = u.id', 'left');
 		$this->db->join('services', 'services.id = bookings.service_id', 'left');
 		$this->db->join('workshops', 'workshops.id = bookings.workshop_id', 'left');
 		$this->db->join('areas', 'areas.id = bookings.area_id', 'left');

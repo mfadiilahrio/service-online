@@ -43,6 +43,7 @@
                   <tr>
                     <th>No</th>
                     <th>ID</th>
+                    <th>Tipe</th>
                     <th>Customer</th>
                     <th>Area</th>
                     <th>Mekanik</th>
@@ -60,6 +61,7 @@
                       <tr class="clickable-row" onclick="window.location='<?= base_url("booking?id=$record->id") ?>'" class="clickable-row">
                         <td><?= $no; ?></td>
                         <td><?= $record->id ?></td>
+                        <td><?= ($record->type == 'booking') ? 'Servis' : 'Belanja' ?></td>
                         <td><?= $record->user_name ?></td>
                         <td><?= $record->area_name ?></td>
                         <td><?= $record->mechanic_name ?></td>

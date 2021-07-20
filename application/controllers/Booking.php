@@ -72,11 +72,10 @@ class Booking extends CI_Controller {
 		if ($type == 'shopping' || $type == 'booking') {
 			$this->form_validation->set_rules('type', 'Tipe Pesanan', 'required');
 			$this->form_validation->set_rules('area_id', 'Area', 'required|numeric');
-			$this->form_validation->set_rules('complaint', 'Keluhan', 'required');
 			if ($type == 'booking') {
-				// code...
+				$this->form_validation->set_rules('complaint', 'Keluhan', 'required');
+				$this->form_validation->set_rules('date', 'Tanggal', 'required');
 			}
-			$this->form_validation->set_rules('date', 'Tanggal', 'required');
 			$this->form_validation->set_rules('bank_account_id', 'Metode pembayaran', 'required|numeric');
 
 			if($this->form_validation->run()) {
@@ -85,9 +84,11 @@ class Booking extends CI_Controller {
 					'user_id' => $this->session->userdata('user_id'),
 					'service_id' => ($type == 'shopping') ? 1 : 2,
 					'area_id' => $area_id,
-					'complaint' => $complaint,
+					'type' => $type,
+					'complaint' => ($type == 'booking') ? $complaint : NULL,
 					'date' => ($type == 'shopping') ? $this->timeStamp : $date,
 					'address' => $this->session->userdata('address'),
+					'phone' => $this->session->userdata('phone'),
 					'postal_code' => $this->session->userdata('postal_code'),
 					'bank_account_id' => $bank_account_id
 				);

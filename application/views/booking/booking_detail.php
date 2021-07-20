@@ -58,10 +58,10 @@
                 <div class="col-sm-4 invoice-col">
                   Kepada
                   <address>
-                    <strong><?= $this->session->userdata('name') ?></strong><br>
-                    <?= $record->address.', '.$this->session->userdata('postal_code') ?><br>
-                    Phone: <?= $this->session->userdata('phone') ?><br>
-                    Email: <?= $this->session->userdata('email') ?>
+                    <strong><?= $record->user_name ?></strong><br>
+                    <?= $record->address.', '.$record->postal_code ?><br>
+                    Phone: <?= $record->phone ?><br>
+                    Email: <?= $record->user_email ?>
                   </address>
                 </div>
                 <!-- /.col -->

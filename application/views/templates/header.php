@@ -230,6 +230,7 @@
               </li>
             </ul>
           </li>
+          <?php if ($this->session->userdata('user_type') == 'customer') : ?>
           <li class="nav-item main-nav">
             <a href="#" class="nav-link">
               <i class="nav-icon fas fa-headset"></i>
@@ -258,7 +259,8 @@
                 </a>
               </li>
             </ul>
-          </li> 
+          </li>
+          <?php endif ?>
           <?php if ($this->session->userdata('user_type') == 'admin') : ?>
           <li class="nav-item main-nav">
             <a href="#" class="nav-link">

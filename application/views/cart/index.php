@@ -147,6 +147,7 @@
                         </select>
                         <input type="hidden" name="type" value="<?= $this->input->get('type') ?>">
                       </div>
+                      <?php if ($this->input->get('type') == 'booking') : ?>
                       <div class="form-group">
                         <label>Keluhan</label>
                         <textarea name="complaint" class="form-control" required></textarea>
@@ -160,6 +161,7 @@
                           </div>
                         </div>
                       </div>
+                      <?php endif ?>
                       <div class="form-group">
                         <label>Metode pembayaran</label>
                         <select name="bank_account_id" class="form-control select2bs4" style="width: 100%;" required>

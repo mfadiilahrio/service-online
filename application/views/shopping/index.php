@@ -189,7 +189,7 @@
               toast: true,
               icon: 'success',
               showCloseButton: true,
-              position: 'top-end',
+              position: 'top-start',
               showConfirmButton: false,
               title: '&nbsp;&nbsp;&nbsp;Berhasil!',
               text: resultData.message,

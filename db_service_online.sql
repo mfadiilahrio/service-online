@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:8889
--- Generation Time: Jul 18, 2021 at 11:46 PM
+-- Generation Time: Jul 20, 2021 at 12:21 PM
 -- Server version: 5.7.26
 -- PHP Version: 5.6.40
 
@@ -77,7 +77,7 @@ CREATE TABLE `banks` (
 --
 
 INSERT INTO `banks` (`id`, `name`) VALUES
-(1, 'Cash'),
+(1, 'Artha Graha'),
 (2, 'BCA'),
 (3, 'Mandiri');
 
@@ -90,7 +90,7 @@ INSERT INTO `banks` (`id`, `name`) VALUES
 CREATE TABLE `bank_accounts` (
   `id` int(11) NOT NULL,
   `bank_id` int(11) NOT NULL,
-  `account_number` int(11) DEFAULT NULL
+  `account_number` bigint(20) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
@@ -98,9 +98,9 @@ CREATE TABLE `bank_accounts` (
 --
 
 INSERT INTO `bank_accounts` (`id`, `bank_id`, `account_number`) VALUES
-(1, 1, NULL),
-(2, 2, 2222222),
-(3, 3, 2222222);
+(1, 1, 50401056000076),
+(2, 2, 5220304312),
+(3, 3, 1560009861518);
 
 -- --------------------------------------------------------
 
@@ -115,9 +115,11 @@ CREATE TABLE `bookings` (
   `workshop_id` int(11) DEFAULT NULL,
   `area_id` int(11) NOT NULL,
   `mechanic_id` int(11) DEFAULT NULL,
-  `complaint` text NOT NULL,
+  `type` enum('booking','shopping') NOT NULL,
+  `complaint` text,
   `date` datetime NOT NULL,
   `address` varchar(255) NOT NULL,
+  `phone` varchar(20) NOT NULL,
   `postal_code` int(5) NOT NULL,
   `other_cost` bigint(20) DEFAULT NULL,
   `other_cost_note` text,
@@ -132,8 +134,9 @@ CREATE TABLE `bookings` (
 -- Dumping data for table `bookings`
 --
 
-INSERT INTO `bookings` (`id`, `user_id`, `service_id`, `workshop_id`, `area_id`, `mechanic_id`, `complaint`, `date`, `address`, `postal_code`, `other_cost`, `other_cost_note`, `booking_status`, `bank_account_id`, `awb_number`, `payment_url`, `created_at`) VALUES
-(10011, 2, 2, 1, 5, 3, 'Lampu sein mati', '2021-07-19 04:35:00', 'Perumahan Taman Alamanda Blok G11 No.29 Rt 002 RW 022 Tambun Utara', 17510, 25000, 'Perbaikan kabel', 'completed', 1, NULL, NULL, '2021-07-18 21:35:23');
+INSERT INTO `bookings` (`id`, `user_id`, `service_id`, `workshop_id`, `area_id`, `mechanic_id`, `type`, `complaint`, `date`, `address`, `phone`, `postal_code`, `other_cost`, `other_cost_note`, `booking_status`, `bank_account_id`, `awb_number`, `payment_url`, `created_at`) VALUES
+(10016, 2, 2, NULL, 5, NULL, 'booking', 'Ganti oli', '2021-07-21 17:13:31', 'Perumahan Taman Alamanda Blok G11 No.29 Rt 002 RW 022 Tambun Utara', '0895-2903-7444', 17510, NULL, NULL, 'waiting_confirmation', 1, NULL, NULL, '2021-07-20 10:13:37'),
+(10017, 2, 1, NULL, 5, NULL, 'shopping', NULL, '2021-07-20 17:18:23', 'Perumahan Taman Alamanda Blok G11 No.29 Rt 002 RW 022 Tambun Utara', '0895-2903-7444', 17510, NULL, NULL, 'waiting_confirmation', 1, NULL, NULL, '2021-07-20 10:18:23');
 
 -- --------------------------------------------------------
 
@@ -154,8 +157,10 @@ CREATE TABLE `booking_items` (
 --
 
 INSERT INTO `booking_items` (`id`, `booking_id`, `item_id`, `price`, `qty`) VALUES
-(9, 10011, 10, 15000, 2),
-(10, 10011, 5, 45000, 1);
+(21, 10016, 5, 45000, 1),
+(22, 10017, 1, 50000, 1),
+(23, 10017, 11, 25900, 1),
+(24, 10017, 2, 60000, 1);
 
 -- --------------------------------------------------------
 
@@ -217,7 +222,10 @@ CREATE TABLE `carts` (
 --
 
 INSERT INTO `carts` (`id`, `user_id`, `type`, `status`) VALUES
-(12, 2, 'booking', 0);
+(17, 2, 'booking', 0),
+(18, 1, 'shopping', 1),
+(19, 2, 'shopping', 0),
+(20, 2, 'booking', 1);
 
 -- --------------------------------------------------------
 
@@ -237,8 +245,13 @@ CREATE TABLE `cart_items` (
 --
 
 INSERT INTO `cart_items` (`id`, `cart_id`, `item_id`, `qty`) VALUES
-(72, 12, 10, 2),
-(73, 12, 5, 1);
+(84, 17, 5, 1),
+(85, 18, 4, 1),
+(86, 18, 3, 1),
+(87, 19, 1, 1),
+(88, 19, 11, 1),
+(89, 19, 2, 1),
+(90, 20, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -260,17 +273,17 @@ CREATE TABLE `items` (
 --
 
 INSERT INTO `items` (`id`, `brand_type_id`, `name`, `price`, `image_url`, `qty`) VALUES
-(1, 1, 'Kampas rem depan', 50000, '', 100),
-(2, 1, 'Kampas rem belakang', 60000, '', 100),
-(3, 2, 'Kampas rem depan', 40000, '', 100),
-(4, 2, 'Kampas rem belakang', 50000, '', 100),
-(5, NULL, 'Pertamina Enduro Matic, 10W-30, API SL, JASO MB 0.8L 1pc', 45000, 'assets/images/item_5.png', 99),
+(1, 1, 'Kampas rem depan', 50000, '', 98),
+(2, 1, 'Kampas rem belakang', 60000, '', 98),
+(3, 2, 'Kampas rem depan', 40000, '', 99),
+(4, 2, 'Kampas rem belakang', 50000, '', 99),
+(5, NULL, 'Pertamina Enduro Matic, 10W-30, API SL, JASO MB 0.8L 1pc', 45000, 'assets/images/item_5.png', 95),
 (6, 1, 'Filter udara', 85000, '', 100),
 (7, 1, 'Lampu depan', 25900, '', 100),
 (8, 1, 'Kampas rem belakang', 60000, '', 100),
 (9, 1, 'Lampu belakang', 26000, '', 100),
 (10, 1, 'Lampu sein', 15000, '', 98),
-(11, NULL, 'Minyak rem', 25900, '', 100),
+(11, NULL, 'Minyak rem', 25900, '', 96),
 (12, 1, 'Handle rem', 110000, '', 100);
 
 -- --------------------------------------------------------
@@ -491,13 +504,13 @@ ALTER TABLE `bank_accounts`
 -- AUTO_INCREMENT for table `bookings`
 --
 ALTER TABLE `bookings`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10012;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10018;
 
 --
 -- AUTO_INCREMENT for table `booking_items`
 --
 ALTER TABLE `booking_items`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- AUTO_INCREMENT for table `brands`
@@ -515,13 +528,13 @@ ALTER TABLE `brand_types`
 -- AUTO_INCREMENT for table `carts`
 --
 ALTER TABLE `carts`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT for table `cart_items`
 --
 ALTER TABLE `cart_items`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=74;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=91;
 
 --
 -- AUTO_INCREMENT for table `items`

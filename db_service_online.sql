@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:8889
--- Generation Time: Jul 24, 2021 at 10:54 PM
+-- Generation Time: Jul 24, 2021 at 11:17 PM
 -- Server version: 5.7.26
 -- PHP Version: 5.6.40
 
@@ -45,7 +45,7 @@ INSERT INTO `areas` (`id`, `name`) VALUES
 CREATE TABLE `auth` (
   `id` int(11) NOT NULL,
   `email` varchar(100) NOT NULL,
-  `password` varchar(100) NOT NULL,
+  `password` varchar(255) NOT NULL,
   `user_id` int(11) NOT NULL,
   `user_type` enum('customer','admin','mechanic') NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -273,26 +273,27 @@ CREATE TABLE `items` (
   `name` varchar(100) NOT NULL,
   `price` bigint(20) NOT NULL,
   `image_url` varchar(255) DEFAULT NULL,
-  `qty` int(11) NOT NULL
+  `qty` int(11) NOT NULL,
+  `status` tinyint(1) NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
 -- Dumping data for table `items`
 --
 
-INSERT INTO `items` (`id`, `brand_type_id`, `name`, `price`, `image_url`, `qty`) VALUES
-(1, 1, 'Kampas rem depan', 50000, '', 96),
-(2, 1, 'Kampas rem belakang', 60000, '', 98),
-(3, 2, 'Kampas rem depan', 40000, '', 99),
-(4, 2, 'Kampas rem belakang', 50000, '', 99),
-(5, NULL, 'Pertamina Enduro Matic, 10W-30, API SL, JASO MB 0.8L 1pc', 45000, 'assets/images/items/item_5.png', 95),
-(6, 1, 'Filter udara', 85000, '', 100),
-(7, 1, 'Lampu depan', 25900, '', 100),
-(8, 1, 'Kampas rem belakang', 60000, '', 98),
-(9, 1, 'Lampu belakang', 26000, '', 99),
-(10, 1, 'Lampu sein', 15000, '', 98),
-(11, NULL, 'Minyak rem', 25900, '', 96),
-(12, 1, 'Handle rem', 110000, '', 100);
+INSERT INTO `items` (`id`, `brand_type_id`, `name`, `price`, `image_url`, `qty`, `status`) VALUES
+(1, 1, 'Kampas rem depan', 50000, '', 96, 1),
+(2, 1, 'Kampas rem belakang', 60000, '', 98, 1),
+(3, 2, 'Kampas rem depan', 40000, '', 99, 1),
+(4, 2, 'Kampas rem belakang', 50000, '', 99, 1),
+(5, NULL, 'Pertamina Enduro Matic, 10W-30, API SL, JASO MB 0.8L 1pc', 45000, 'assets/images/items/item_5.png', 95, 1),
+(6, 1, 'Filter udara', 85000, '', 100, 1),
+(7, 1, 'Lampu depan', 25900, '', 100, 1),
+(8, 1, 'Kampas rem belakang', 60000, '', 98, 1),
+(9, 1, 'Lampu belakang', 26000, '', 99, 1),
+(10, 1, 'Lampu sein', 15000, '', 98, 1),
+(11, NULL, 'Minyak rem', 25900, '', 96, 1),
+(12, 1, 'Handle rem', 110000, '', 100, 1);
 
 -- --------------------------------------------------------
 
@@ -356,7 +357,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `name`, `phone`, `address`, `postal_code`, `dob`) VALUES
-(1, 'Admin', '082125207042', 'Bekasi Utara', NULL, '1111-01-01'),
+(1, 'Admin', '0821-2520-7042', 'Bekasi Utara', 17110, '1111-01-01'),
 (2, 'M Fadhilah Rio Bagus Saputro', '0895-2903-7444', 'Perumahan Taman Alamanda Blok G11 No.29 Rt 002 RW 022 Tambun Utara', 17510, '1998-05-08'),
 (3, 'Berto', '082111111111', 'Harapan Jaya Bekasi Utara', 17510, '1997-07-01'),
 (4, 'Rio', '0895-2903-7441', 'Perumahan Taman Alamanda Blok G11 No.29 Rt 002 RW 022 Tambun Utara', 17510, '1998-05-06'),

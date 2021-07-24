@@ -244,18 +244,6 @@
               <li class="nav-item">
                 <a href="https://api.whatsapp.com/send?phone=+6282125207042" class="nav-link" target="_blank">
                   <i class="far fa-circle nav-icon"></i>
-                  <p>Cara Belanja</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="https://api.whatsapp.com/send?phone=+6282125207042" class="nav-link" target="_blank">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Cara Booking</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="https://api.whatsapp.com/send?phone=+6282125207042" class="nav-link" target="_blank">
-                  <i class="far fa-circle nav-icon"></i>
                   <p>Hubungi CS</p>
                 </a>
               </li>
@@ -267,15 +255,15 @@
             <a href="#" class="nav-link">
               <i class="nav-icon fas fa-users"></i>
               <p>
-                User
+                Mekanik
                 <i class="right fas fa-angle-left"></i>
               </p>
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="<?= base_url("user") ?>" class="nav-link">
+                <a href="<?= base_url("mechanic") ?>" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
-                  <p>Data User</p>
+                  <p>Data mekanik</p>
                 </a>
               </li>
             </ul>
@@ -305,7 +293,7 @@
               </li>
             </ul>
           </li>
-          <li class="nav-item main-nav">
+          <li class="nav-item main-nav" hidden>
             <a href="<?= base_url("auth/bank") ?>" class="nav-link">
               <i class="nav-icon fa fa-credit-card"></i>
               <p>
@@ -313,7 +301,7 @@
               </p>
             </a>
           </li>
-          <li class="nav-item main-nav">
+          <li class="nav-item main-nav" hidden>
             <a href="<?= base_url("auth/area") ?>" class="nav-link">
               <i class="nav-icon fa fa-map"></i>
               <p>

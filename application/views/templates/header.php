@@ -39,6 +39,7 @@
   <link rel="stylesheet" href="<?= base_url('assets/dist/css/adminlte.min.css'); ?>">
   <!-- jQuery -->
   <script src="<?= base_url('assets/plugins/jquery/jquery.min.js'); ?>"></script>
+  <script src="<?= base_url('assets/plugins/jquery/loadingoverlay.min.js'); ?>"></script>
 </head>
 <body class="hold-transition sidebar-mini">
 <div class="wrapper">
@@ -283,11 +284,11 @@
             <a href="#" class="nav-link">
               <i class="nav-icon fas fa-boxes"></i>
               <p>
-                Bengkel & Barang
+                Barang / Produk
                 <i class="right fas fa-angle-left"></i>
               </p>
             </a>
-            <ul class="nav nav-treeview">
+            <ul class="nav nav-treeview" hidden>
               <li class="nav-item">
                 <a href="<?= base_url("workshop") ?>" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>

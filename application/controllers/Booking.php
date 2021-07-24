@@ -13,6 +13,8 @@ class Booking extends CI_Controller {
 		$this->load->model('m_booking');
 		$this->load->model('m_cart');
 		$this->load->model('m_item');
+		$this->load->model('m_workshop');
+		$this->load->model('m_user');
 		$this->timeStamp = date('Y-m-d H:i:s', time());
 	}
 
@@ -28,6 +30,8 @@ class Booking extends CI_Controller {
 		if ($id != null) {
 			$data['record'] = $this->m_booking->getBooking(array('bookings.id' => $id));
 			$data['records'] = $this->m_booking->getBookingItems($id);
+			$data['workshops'] = $this->m_workshop->getWorkshops();
+			$data['mechanics'] = $this->m_user->getMechanics();
 
 			$subtotal = 0;
 
@@ -40,12 +44,14 @@ class Booking extends CI_Controller {
 			$view = ($print) ? 'booking/invoice_print' :'booking/booking_detail';
 		} else {
 			if ($this->session->userdata('user_type') == 'customer') {
-				$where['user_id'] = $this->session->userdata('user_id');
+				$where['bookings.user_id'] = $this->session->userdata('user_id');
 			} else if($this->session->userdata('user_type') == 'mechanic') {
-				$where['mechanic_id'] = $this->session->userdata('user_id');
+				$where['bookings.mechanic_id'] = $this->session->userdata('user_id');
+			} else {
+				$where = array();
 			}
 
-			$data['records'] = $this->m_booking->getBookings(array());
+			$data['records'] = $this->m_booking->getBookings($where);
 
 			$view = 'booking/index';
 		}
@@ -130,6 +136,163 @@ class Booking extends CI_Controller {
 		} else {
 			$this->session->set_flashdata('message', "Error saat membuat pesanan");
 			redirect('cart?type=booking','refresh');
+		}
+	}
+
+	public function adminupdatebookingstatus()
+	{
+		if ($this->session->userdata('user_type') == 'admin') {
+			$user_id = $this->session->userdata('user_id');
+			$id = $this->input->post('id');
+			$type = $this->input->post('type');
+			$booking_status = $this->input->post('booking_status');
+			$workshop_id = $this->input->post('workshop_id');
+			$mechanic_id = $this->input->post('mechanic_id');
+			$other_cost = $this->input->post('other_cost');
+			$other_cost_note = $this->input->post('other_cost_note');
+			$awb_number = $this->input->post('awb_number');
+			$payment_url = $this->input->post('payment_url');
+
+			if ($user_id == null || $id == null || $type == null || $booking_status == null) {
+				echo json_encode(array('error' => 'Error saat mengupdate status pesanan'));
+			} else {
+				if ($booking_status == 'confirmed') {
+					if ($type == 'booking') {
+						if ($workshop_id == null || $mechanic_id == null) {
+							echo json_encode(array('error' => 'Error saat mengupdate status pesanan'));
+						} else {
+							$data = array(
+								'workshop_id' => $workshop_id,
+								'mechanic_id' => $mechanic_id,
+								'booking_status' => $booking_status
+							);
+						}
+					} else {
+						$data = array(
+							'booking_status' => $booking_status
+						);
+					}
+				} else if ($booking_status == 'waiting_payment') {
+					if ($type == 'booking') {
+						$data = array(
+							'other_cost' => $other_cost,
+							'other_cost_note' => $other_cost_note,
+							'booking_status' => $booking_status
+						);
+					} else {
+						$data = array(
+							'booking_status' => $booking_status
+						);
+					}	
+				} else if ($booking_status == 'process' || $booking_status == 'completed' || $booking_status == 'canceled') {
+					$data = array(
+						'booking_status' => $booking_status
+					);
+				} else if ($booking_status == 'shipped') {
+					$data = array(
+						'workshop_id' => $workshop_id,
+						'booking_status' => $booking_status,
+						'awb_number' => $awb_number
+					);
+				}
+
+				if ($this->m_base->updateData('bookings', $data, 'id', $id)) {
+					echo json_encode(array('message' => 'Pesanan berhasil diupdate'));
+				} else {
+					echo json_encode(array('error' => 'Error saat mengupdate status pesanan'));
+				}
+			}
+		} else {
+			echo json_encode(array('error' => 'Akses ditolak'));
+		}
+	}
+
+	public function customerupdatebookingstatus()
+	{
+		if ($this->session->userdata('user_type') == 'customer' || $this->session->userdata('user_type') == 'admin') {
+			$user_id = $this->session->userdata('user_id');
+			$id = $this->input->post('id');
+			$booking_status = $this->input->post('booking_status');
+
+			if ($user_id == null || $booking_status != 'completed') {
+				echo json_encode(array('error' => 'Error saat mengupdate status pesanan'));
+			} else {
+				$data = array(
+					'booking_status' => $booking_status
+				);
+
+				if ($this->m_base->updateData('bookings', $data, 'id', $id)) {
+					echo json_encode(array('message' => 'Pesanan berhasil diupdate'));
+				} else {
+					echo json_encode(array('error' => 'Error saat mengupdate status pesanan'));
+				}
+			}
+		} else {
+			echo json_encode(array('error' => 'Akses ditolak'));
+		}
+	}
+
+	public function mechanicupdatebookingstatus()
+	{
+		if ($this->session->userdata('user_type') == 'mechanic' || $this->session->userdata('user_type') == 'admin') {
+			$user_id = $this->session->userdata('user_id');
+			$id = $this->input->post('id');
+			$booking_status = $this->input->post('booking_status');
+
+			if ($user_id == null || !($booking_status == 'process' || $booking_status == 'waiting_payment')) {
+				echo json_encode(array('error' => 'Error saat mengupdate status pesanan'));
+			} else {
+				$data = array(
+					'booking_status' => $booking_status
+				);
+
+				if ($this->m_base->updateData('bookings', $data, 'id', $id)) {
+					echo json_encode(array('message' => 'Pesanan berhasil diupdate'));
+				} else {
+					echo json_encode(array('error' => 'Error saat mengupdate status pesanan'));
+				}
+			}
+		} else {
+			echo json_encode(array('error' => 'Akses ditolak'));
+		}
+	}
+
+	public function uploadpaymentreceipt(){
+		$id = $this->input->post('id');
+
+		$this->form_validation->set_rules('id', 'ID', 'required|numeric');
+
+		if($this->form_validation->run()) {
+			$filename = 'payment_'.$id.'.png';
+
+			$config['upload_path']          = './assets/images/payments/';
+			$config['allowed_types']        = 'gif|jpg|png';
+			$config['file_name']            = $filename;
+			$config['overwrite']			= true;
+			$config['max_size']             = 1024;
+			//$config['max_width']            = 1024;
+			//$config['max_height']           = 768;
+
+			$this->load->library('upload', $config);
+
+			if ($this->upload->do_upload('image')) {
+				$data = array(
+					'booking_status' => 'checking_payment',
+					'payment_url' => 'assets/images/payments/'.$filename
+				);
+
+				if ($this->m_base->updateData('bookings', $data, 'id', $id)) {
+					$this->session->set_flashdata('success', 'Bukti pembayaran berhasil diupload');
+				} else {
+					$this->session->set_flashdata('message', "Error saat mengupdate status pesanan");
+				}
+			} else{
+				$this->session->set_flashdata('message', "Error saat mengupload bukti pembayaran");
+			}
+			redirect('booking?id='.$id,'refresh');
+		} else {
+			$this->session->set_flashdata('error', validation_errors());
+			redirect('booking?id=$'.$id,'refresh');
 		}
 	}
 

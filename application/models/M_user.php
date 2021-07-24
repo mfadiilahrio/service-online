@@ -15,6 +15,22 @@ class M_user extends CI_Model {
 		$this->db->order_by('users.id', 'desc');
 		return $this->db->get('users')->result();
 	}
+
+	function getProfile() {
+		$this->db->select('users.*, auth.email, auth.user_type');
+		$this->db->join('auth', 'auth.user_id = users.id');
+		$this->db->where('users.id', $this->session->userdata('user_id'));
+
+		return $this->db->get('users')->row();
+	}
+
+	function getMechanics() {
+		$this->db->select('users.*');
+		$this->db->join('auth', 'auth.user_id = users.id');
+		$this->db->where('auth.user_type', 'mechanic');
+
+		return $this->db->get('users')->result();
+	}
 }
 
 /* End of file m_user.php */

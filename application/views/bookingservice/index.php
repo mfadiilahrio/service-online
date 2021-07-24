@@ -135,12 +135,16 @@
           'brand_id':$('#brand_id').val()
         }
 
+        $.LoadingOverlay("show");
+
         $.ajax({
           type: 'GET',
           url: "<?php echo base_url("bookingservice/getbrandtypebybrandid")?>",
           data: data,
           dataType: "json",
           success: function(resultData) { 
+            $.LoadingOverlay("hide");
+
             var toAppend = '';
             toAppend += '<option>--Pilih Tipe</option>';
             $.each(resultData,function(i,o){
@@ -159,12 +163,16 @@
           'brand_type_id':$('#brand_type_id').val()
         }
 
+        $.LoadingOverlay("show");
+
         $.ajax({
           type: 'GET',
           url: "<?php echo base_url("bookingservice/getitemsbybrandtypeid")?>",
           data: data,
           dataType: "json",
           success: function(resultData) { 
+            $.LoadingOverlay("hide");
+
             var toAppend = '';
             $.each(resultData,function(i,o){
               var image_url = "";

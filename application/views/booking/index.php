@@ -56,19 +56,29 @@
                   </thead>
                   <tbody>
                     <?php $no = 1; ?>
-
                     <?php foreach ($records as $record) { ?>
+                      <?php
+                      if ($record->booking_status == 'waiting_confirmation' || $record->booking_status == 'checking_payment') {
+                        $color = 'warning';
+                      } else if ($record->booking_status == 'completed') {
+                        $color = 'secondary';
+                      } else if ($record->booking_status == 'canceled') {
+                        $color = 'danger';
+                      } else {
+                        $color = 'primary';
+                      }
+                      ?>
                       <tr class="clickable-row" onclick="window.location='<?= base_url("booking?id=$record->id") ?>'" class="clickable-row">
                         <td><?= $no; ?></td>
                         <td><?= $record->id ?></td>
-                        <td><?= ($record->type == 'booking') ? 'Servis' : 'Belanja' ?></td>
+                        <td><span class="badge badge-<?= ($record->type == 'booking') ? 'success' : 'secondary' ?>"><?= ($record->type == 'booking') ? 'Servis' : 'Belanja' ?></span></td>
                         <td><?= $record->user_name ?></td>
                         <td><?= $record->area_name ?></td>
                         <td><?= $record->mechanic_name ?></td>
                         <td class="text-truncate" style="max-width: 150px;"><?= $record->complaint ?></td>
                         <td><?= $record->date ?></td>
                         <td><?= "Rp " . number_format($record->other_cost, 0, ",", ".") ?></td>
-                        <td><?= $record->booking_status ?></td>
+                        <td><span class="badge badge-<?= $color ?>"><?= $record->booking_status_name ?></span></td>
                         <td><?= "$record->bank_name - $record->account_number" ?></td>
                       </tr>
                       <?php $no++; } ?>

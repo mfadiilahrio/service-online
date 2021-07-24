@@ -11,6 +11,7 @@ class Profile extends CI_Controller {
 		
 		$this->load->model('m_base');
 		$this->load->model('m_cart');
+		$this->load->model('m_user');
 		$this->timeStamp = date('Y-m-d H:i:s', time());
 	}
 
@@ -20,7 +21,7 @@ class Profile extends CI_Controller {
 		$data['error'] = $this->session->flashdata('error');
 		$data['message'] = (validation_errors()) ? validation_errors() : $this->session->flashdata('message');
 
-		$user = $this->m_base->getWhere('users', array('id' => $this->session->userdata('user_id')));
+		$user = $this->m_user->getProfile();
 
 		if ($user != null) {
 			$this->session->unset_userdata('name');

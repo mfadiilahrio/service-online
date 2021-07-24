@@ -30,41 +30,7 @@ class M_booking extends CI_Model {
 
 		$data = $this->db->get_where('bookings', $where)->row();
 
-		if ($data->booking_status == 'waiting_confirmation') {
-			$data->booking_status = 'Menunggu Persetujuan';
-			$data->next_booking_status = 'confirmed';
-			$data->next_booking_status_name = 'Konfirmasi';
-		} else if ($data->booking_status == 'confirmed') {
-			$data->booking_status = 'Dikonfirmasi';
-			$data->next_booking_status = 'booking';
-			$data->next_booking_status_name = 'Booking';
-		} else if ($data->booking_status == 'booking') {
-			$data->booking_status = 'Booking';
-			$data->next_booking_status = 'process';
-			$data->next_booking_status_name = 'Proses';
-		} else if ($data->booking_status == 'process') {
-			$data->booking_status = 'Diproses';
-			$data->next_booking_status = 'waiting_payment';
-			$data->next_booking_status_name = 'Menunggu Pembayaran';
-		} else if ($data->booking_status == 'waiting_payment') {
-			$data->booking_status = 'Menunggu Pembayaran';
-			$data->next_booking_status = 'checking_payment';
-			$data->next_booking_status_name = 'Mengecek Pembayaran';
-		} else if ($data->booking_status == 'checking_payment') {
-			$data->booking_status = 'Mengecek Pembayaran';
-			$data->next_booking_status = 'completed';
-			$data->next_booking_status_name = 'Selesai';
-		} else if ($data->booking_status == 'completed') {
-			$data->booking_status = 'Selesai';
-			$data->next_booking_status = null;
-			$data->next_booking_status_name = null;
-		} else if ($data->booking_status == 'canceled') {
-			$data->booking_status = 'Dibatalkan';
-			$data->next_booking_status = null;
-			$data->next_booking_status_name = null;
-		}
-
-		return $data;
+		return $this->generateBookingStatus($data);
 	}
 
 	function getBookings($where) {
@@ -92,45 +58,13 @@ class M_booking extends CI_Model {
 		$this->db->join('banks', 'banks.id = bank_accounts.bank_id', 'left');
 		$this->db->order_by("bookings.created_at", "desc");
 
-		$datas = $this->db->get_where('bookings', $where)->result();
+		$result = $this->db->get_where('bookings', $where)->result();
 
-		foreach ($datas as $data) {
-			if ($data->booking_status == 'waiting_confirmation') {
-				$data->booking_status = 'Menunggu Persetujuan';
-				$data->next_booking_status = 'confirmed';
-				$data->next_booking_status_name = 'Konfirmasi';
-			} else if ($data->booking_status == 'confirmed') {
-				$data->booking_status = 'Dikonfirmasi';
-				$data->next_booking_status = 'booking';
-				$data->next_booking_status_name = 'Booking';
-			} else if ($data->booking_status == 'booking') {
-				$data->booking_status = 'Booking';
-				$data->next_booking_status = 'process';
-				$data->next_booking_status_name = 'Proses';
-			} else if ($data->booking_status == 'process') {
-				$data->booking_status = 'Diproses';
-				$data->next_booking_status = 'waiting_payment';
-				$data->next_booking_status_name = 'Menunggu Pembayaran';
-			} else if ($data->booking_status == 'waiting_payment') {
-				$data->booking_status = 'Menunggu Pembayaran';
-				$data->next_booking_status = 'checking_payment';
-				$data->next_booking_status_name = 'Mengecek Pembayaran';
-			} else if ($data->booking_status == 'checking_payment') {
-				$data->booking_status = 'Mengecek Pembayaran';
-				$data->next_booking_status = 'completed';
-				$data->next_booking_status_name = 'Selesai';
-			} else if ($data->booking_status == 'completed') {
-				$data->booking_status = 'Selesai';
-				$data->next_booking_status = null;
-				$data->next_booking_status_name = null;
-			} else if ($data->booking_status == 'canceled') {
-				$data->booking_status = 'Dibatalkan';
-				$data->next_booking_status = null;
-				$data->next_booking_status_name = null;
-			}
+		foreach ($result as $row) {
+			$this->generateBookingStatus($row);
 		}
 
-		return $datas;
+		return $result;
 	}
 
 	function getBookingItems($id) {
@@ -159,6 +93,104 @@ class M_booking extends CI_Model {
 		}
 
 		return $datas;
+	}
+
+	function generateBookingStatus($data) {
+
+		// **Untuk booking urutan statusnya** 
+		// 1. waiting_confirmation 
+		// 2. confirmed  
+		// 3. process 
+		// 4. waiting_payment 
+		// 5. checking_payment 
+		// 6. completed
+
+		// **Untuk shopping urutan statusnya** 
+		// 1. waiting_confirmation 
+		// 2. confirmed 
+		// 3. waiting_payment 
+		// 4. checking_payment 
+		// 5. process 
+		// 6. shipped 
+		// 7. completed 
+
+		if ($data->type == 'booking') {
+			if ($data->booking_status == 'waiting_confirmation') {
+				//1
+				$data->booking_status_name = 'Menunggu Konfirmasi';
+				$data->next_booking_status = 'confirmed';
+				$data->next_booking_status_name = 'Konfirmasi';
+			} else if ($data->booking_status == 'confirmed') {
+				//2
+				$data->booking_status_name = 'Dikonfirmasi';
+				$data->next_booking_status = 'process';
+				$data->next_booking_status_name = 'Proses';
+			} else if ($data->booking_status == 'process') {
+				//3
+				$data->booking_status_name = 'Diproses';
+				$data->next_booking_status = 'waiting_payment';
+				$data->next_booking_status_name = 'Kendaraan selesai diperbaiki';
+			} else if ($data->booking_status == 'waiting_payment') {
+				//4
+				$data->booking_status_name = 'Menunggu Pembayaran';
+				$data->next_booking_status = 'checking_payment';
+				$data->next_booking_status_name = 'Cek Pembayaran';
+			} else if ($data->booking_status == 'checking_payment') {
+				//5
+				$data->booking_status_name = 'Mengecek Pembayaran';
+				$data->next_booking_status = 'completed';
+				$data->next_booking_status_name = 'Cek Pembayaran';
+			} else if ($data->booking_status == 'completed') {
+				//6
+				$data->booking_status_name = 'Selesai';
+				$data->next_booking_status = null;
+				$data->next_booking_status_name = null;
+			} else if ($data->booking_status == 'canceled') {
+				//7
+				$data->booking_status_name = 'Dibatalkan';
+				$data->next_booking_status = null;
+				$data->next_booking_status_name = null;
+			}
+		} else {
+			if ($data->booking_status == 'waiting_confirmation') {
+				//1
+				$data->booking_status_name = 'Menunggu Konfirmasi';
+				$data->next_booking_status = 'waiting_payment';
+				$data->next_booking_status_name = 'Konfirmasi';
+			} else if ($data->booking_status == 'waiting_payment') {
+				//2
+				$data->booking_status_name = 'Menunggu Pembayaran';
+				$data->next_booking_status = 'checking_payment';
+				$data->next_booking_status_name = 'Mengecek Pembayaran';
+			} else if ($data->booking_status == 'checking_payment') {
+				//3
+				$data->booking_status_name = 'Mengecek Pembayaran';
+				$data->next_booking_status = 'process';
+				$data->next_booking_status_name = 'Cek Pembayaran';
+			} else if ($data->booking_status == 'process') {
+				//4
+				$data->booking_status_name = 'Diproses';
+				$data->next_booking_status = 'shipped';
+				$data->next_booking_status_name = 'Kirim';
+			} else if ($data->booking_status == 'shipped') {
+				//5
+				$data->booking_status_name = 'Dikirim';
+				$data->next_booking_status = 'completed';
+				$data->next_booking_status_name = 'Selesai';
+			} else if ($data->booking_status == 'completed') {
+				//6
+				$data->booking_status_name = 'Selesai';
+				$data->next_booking_status = null;
+				$data->next_booking_status_name = null;
+			} else if ($data->booking_status == 'canceled') {
+				//7
+				$data->booking_status_name = 'Dibatalkan';
+				$data->next_booking_status = null;
+				$data->next_booking_status_name = null;
+			}
+		}
+
+		return $data;
 	}
 }
 

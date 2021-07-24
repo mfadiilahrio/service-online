@@ -31,22 +31,19 @@
       <div class="col-sm-4 invoice-col">
         Dari
         <address>
-          <strong>Admin, Inc.</strong><br>
-          795 Folsom Ave, Suite 600<br>
-          San Francisco, CA 94107<br>
-          Phone: (804) 123-5432<br>
-          Email: info@almasaeedstudio.com
+          <strong><?= 'Service Online - '.$record->workshop_name ?></strong><br>
+          <?= $record->workshop_address.', '.$record->workshop_postal_code ?><br>
+          Phone: <?= $record->workshop_phone ?><br>
         </address>
       </div>
       <!-- /.col -->
       <div class="col-sm-4 invoice-col">
         Kepada
         <address>
-          <strong><?= $this->session->userdata('name') ?></strong><br>
-          <?= $record->address ?><br>
-          <?= $record->postal_code ?><br>
-          Phone: <?= $this->session->userdata('phone') ?><br>
-          Email: <?= $this->session->userdata('email') ?>
+          <strong><?= $record->user_name ?></strong><br>
+          <?= $record->address.', '.$record->postal_code ?><br>
+          Phone: <?= $record->phone ?><br>
+          Email: <?= $record->user_email ?>
         </address>
       </div>
       <!-- /.col -->
@@ -71,12 +68,12 @@
           </thead>
           <tbody>
             <?php foreach ($records as $booking_item) : ?>
-            <tr>
-              <td><?= $booking_item->name ?></td>
-              <td><?= 'Rp. '.number_format($booking_item->price, 0, ",", ".") ?></td>
-              <td><?= $booking_item->qty ?></td>
-              <td><?= 'Rp. '.number_format($booking_item->subtotal, 0, ",", ".") ?></td>
-            </tr>
+              <tr>
+                <td><?= $booking_item->name ?></td>
+                <td><?= 'Rp. '.number_format($booking_item->price, 0, ",", ".") ?></td>
+                <td><?= $booking_item->qty ?></td>
+                <td><?= 'Rp. '.number_format($booking_item->subtotal, 0, ",", ".") ?></td>
+              </tr>
             <?php endforeach ?>
           </tbody>
         </table>
@@ -90,18 +87,26 @@
       <div class="col-6">
         <p class="lead">Metode Pembayaran</p>
 
-        <p class="text-muted well well-sm shadow-none" style="margin-top: 10px;">
-          <?= "$record->bank_name - $record->account_number" ?>
+        <p class="text well well-sm shadow-none" style="margin-top: 10px;">
+          <strong><?= "$record->bank_name - $record->account_number" ?></strong>
         </p>
       </div>
       <!-- /.col -->
       <div class="col-6">
         <div class="table-responsive">
           <table class="table">
-            <tr>
-              <th>Biaya Tambahan</th>
-              <td><?= 'Rp. '.number_format($record->other_cost, 0, ",", ".") ?></td>
-            </tr>
+            <?php if($record->other_cost != null) : ?>
+              <tr>
+                <th>Biaya Tambahan</th>
+                <td><?= 'Rp. '.number_format($record->other_cost, 0, ",", ".") ?></td>
+              </tr>
+            <?php endif ?>
+            <?php if($record->other_cost_note != null && $record->other_cost_note != '') : ?>
+              <tr>
+                <th>Note Biaya Tambahan</th>
+                <td><?= $record->other_cost_note ?></td>
+              </tr>
+            <?php endif ?>
             <tr>
               <th style="width:50%">Total:</th>
               <td><?= 'Rp. '.number_format($subtotal, 0, ",", ".") ?></td>
@@ -112,18 +117,6 @@
       <!-- /.col -->
     </div>
     <!-- /.row -->
-
-    <!-- this row will not appear when printing -->
-    <div class="row no-print">
-      <div class="col-12">
-        <a href="<?= base_url("booking?id=$record->id&print=true") ?>" rel="noopener" target="_blank" class="btn btn-default"><i class="fas fa-print"></i> Print</a>
-        <?php if($record->booking_status == 'Menunggu Pembayaran' && $record->bank_account_id != 1) { ?>
-        <button type="button" class="btn btn-success float-right"><i class="far fa-credit-card"></i> Submit
-          Payment
-        </button>
-        <?php } ?>
-      </div>
-    </div>
   </section>
   <!-- /.content -->
 </div>

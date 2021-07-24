@@ -51,6 +51,10 @@
               <div class="row">
                 <div class="col-md-6">
                   <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" class="form-control" value="<?= $this->session->userdata('email') ?>" readonly> 
+                  </div>
+                  <div class="form-group">
                     <label>Nama</label>
                     <input type="text" name="name" class="form-control" value="<?= $this->session->userdata('name') ?>" required> 
                   </div>
@@ -69,6 +73,10 @@
                   </div>
                 </div>
                 <div class="col-md-6">
+                  <div class="form-group">
+                    <label>Tipe User</label>
+                    <input type="text" class="form-control" value="<?= $this->session->userdata('user_type') ?>" readonly> 
+                  </div>
                   <div class="form-group">
                     <label>Alamat</label>
                     <textarea class="form-control" name="address" required><?= $this->session->userdata('address') ?></textarea>

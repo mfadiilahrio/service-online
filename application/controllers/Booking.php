@@ -238,12 +238,16 @@ class Booking extends CI_Controller {
 			$user_id = $this->session->userdata('user_id');
 			$id = $this->input->post('id');
 			$booking_status = $this->input->post('booking_status');
+			$other_cost = $this->input->post('other_cost');
+			$other_cost_note = $this->input->post('other_cost_note');
 
 			if ($user_id == null || !($booking_status == 'process' || $booking_status == 'waiting_payment')) {
 				echo json_encode(array('error' => 'Error saat mengupdate status pesanan'));
 			} else {
 				$data = array(
-					'booking_status' => $booking_status
+					'booking_status' => $booking_status,
+					'other_cost' => $other_cost,
+					'other_cost_note' => $other_cost_note
 				);
 
 				if ($this->m_base->updateData('bookings', $data, 'id', $id)) {

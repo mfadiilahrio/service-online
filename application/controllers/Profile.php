@@ -53,6 +53,7 @@ class Profile extends CI_Controller {
 	public function update()
 	{
 		$name = $this->input->post('name');
+		$password = $this->input->post('password');
 		$phone = $this->input->post('phone');
 		$address = $this->input->post('address');
 		$postal_code = $this->input->post('postal_code');
@@ -74,6 +75,11 @@ class Profile extends CI_Controller {
 			);
 			
 			if ($this->m_base->updateData('users', $data, 'id', $this->session->userdata('user_id'))) {
+				
+				if ($password != null) {
+					$this->m_base->updateData('auth', array('password' => md5($password)), 'id', $this->session->userdata('id'));
+				}
+
 				$this->session->set_flashdata('success', 'Data berhasil diubah');
 			} else {
 				$this->session->set_flashdata('error', 'Data gagal diubah');

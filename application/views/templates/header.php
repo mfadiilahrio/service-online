@@ -252,6 +252,14 @@
           <?php endif ?>
           <?php if ($this->session->userdata('user_type') == 'admin') : ?>
           <li class="nav-item main-nav">
+            <a href="<?= base_url("sales") ?>" class="nav-link">
+              <i class="nav-icon fas fa-chart-bar"></i>
+              <p>
+                Data penjualan
+              </p>
+            </a>
+          </li>
+          <li class="nav-item main-nav">
             <a href="#" class="nav-link">
               <i class="nav-icon fas fa-users"></i>
               <p>
@@ -263,7 +271,7 @@
               <li class="nav-item">
                 <a href="<?= base_url("mechanic") ?>" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
-                  <p>Data mekanik</p>
+                  <p>Data Mekanik</p>
                 </a>
               </li>
             </ul>
@@ -281,6 +289,14 @@
                 <a href="<?= base_url("workshop") ?>" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Data Bengkel</p>
+                </a>
+              </li>
+            </ul>
+            <ul class="nav nav-treeview">
+              <li class="nav-item">
+                <a href="<?= base_url("brandtype") ?>" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Data Tipe Merek</p>
                 </a>
               </li>
             </ul>

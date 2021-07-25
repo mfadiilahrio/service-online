@@ -1,12 +1,8 @@
   <?php
   $action = ($record != null) ? "Ubah" : "Tambah";
   $id = (isset($record->id)) ? $record->id : '';
-  $brand_type_id = (isset($record->brand_type_id)) ? $record->brand_type_id : '';
   $brand_id = (isset($record->brand_id)) ? $record->brand_id : '';
   $name = (isset($record->name)) ? $record->name : '';
-  $price = (isset($record->price)) ? $record->price : '';
-  $qty = (isset($record->qty)) ? $record->qty : '';
-  $image_url = (isset($record->image_url)) ? $record->image_url : '';
   ?>
 
   <!-- Content Wrapper. Contains page content -->
@@ -55,13 +51,12 @@
           </div>
           <!-- /.card-header -->
           <div class="card-body">
-            <form action="<?= base_url("product/update") ?>" method="POST" enctype="multipart/form-data">
+            <form action="<?= base_url("brandtype/update") ?>" method="POST" enctype="multipart/form-data">
               <div class="row">
                 <div class="col-md-6">
                   <div class="form-group">
                     <label>Merek</label>
-                    <select name="brand_id" id="brand_id" class="form-control select2bs4" style="width: 100%;" <?= ($record != null) ? 'disabled' : '' ?>>
-                      <option>--Pilih Merek--</option>
+                    <select name="brand_id" id="brand_id" class="form-control select2bs4" style="width: 100%;" <?= ($record != null) ? 'disabled' : '' ?> >
                       <?php 
                       foreach ($brands as $data) {
                         $selected = ($data->id == $brand_id) ? 'selected' : '';
@@ -72,42 +67,13 @@
                     <input type="hidden" name="id" class="form-control" value="<?= $id ?>">
                   </div>
                   <div class="form-group">
-                    <label>Tipe</label>
-                    <select name="brand_type_id" id="brand_type_id" class="form-control select2bs4" style="width: 100%;" <?= ($record != null) ? 'disabled' : '' ?>>
-                      <?php if($record != null) : ?>
-                      <option>--Pilih Tipe--</option>
-                      <?php 
-                      foreach ($brand_types as $data) {
-                        $selected = ($data->id == $brand_type_id) ? 'selected' : '';
-                        echo '<option value="'.$data->id.'" '.$selected.'>'.$data->name.'</option>';
-                      }
-                      ?>
-                      <?php endif ?>
-                    </select>
-                  </div>
-                  <div class="form-group">
                     <label>Nama</label>
                     <input type="text" class="form-control" name="name" placeholder="Nama" value="<?= $name; ?>" required>
                     <input type="hidden" name="id" value="<?= $id; ?>">
                   </div>
-                  <div class="form-group">
-                    <label>Harga</label>
-                    <input type="number" class="form-control" name="price" placeholder="Harga" value="<?= $price; ?>" required>
-                  </div>
-                  <div class="form-group">
-                    <label>Qty</label>
-                    <input type="number" class="form-control" name="qty" placeholder="Kuantitas produk" value="<?= $qty; ?>" required>
-                  </div>
                 </div>
                 <!-- /.col -->
-                <div class="col-md-6">  
-                  <div class="form-group">
-                    <div class="img-square-wrapper">
-                      <img src="<?= ($image_url != null) ? base_url("$image_url") : base_url("assets/images/image_placeholder.png") ?>" class="card-img-top" style="width: 120px;object-fit: contain;" alt="<?= base_url("$image_url") ?>">
-                      <input type="file" name="image" class="form-control" value="" <?= ($record == null) ? 'required' : ''?>>
-                      <input type="hidden" name="image_url" class="form-control" value="<?= $image_url ?>" required>
-                    </div>
-                  </div>
+                <div class="col-md-6">
                 </div>
                 <!-- /.col -->
               </div>
@@ -140,46 +106,16 @@
 
       $.ajax({
         type: 'POST',
-        url: "<?php echo base_url("product/delete")?>",
+        url: "<?php echo base_url("brandtype/delete")?>",
         data: data,
         dataType: "json",
         success: function(resultData) {
           if (resultData.error != null) {
             window.alert(resultData.error);
           } else {
-            window.location.href = "<?= base_url("product") ?>";
+            window.location.href = "<?= base_url("brandtype") ?>";
           }  
         }
       });
     }
-
-    $(document).ready(function() {
-      $('#brand_id').change(function(e) {
-
-        $('#brand_type_id').empty();
-
-        var data = {
-          'brand_id':$('#brand_id').val()
-        }
-
-        $.LoadingOverlay("show");
-
-        $.ajax({
-          type: 'GET',
-          url: "<?php echo base_url("bookingservice/getbrandtypebybrandid")?>",
-          data: data,
-          dataType: "json",
-          success: function(resultData) { 
-            $.LoadingOverlay("hide");
-
-            var toAppend = '';
-            toAppend += '<option>--Pilih Tipe</option>';
-            $.each(resultData,function(i,o){
-              toAppend += '<option value="'+o.id+'">'+o.name+'</option>';
-            });
-            $('#brand_type_id').append(toAppend);
-          }
-        });
-      });      
-    });
   </script>

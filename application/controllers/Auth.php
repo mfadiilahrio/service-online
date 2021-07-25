@@ -46,37 +46,43 @@ class Auth extends CI_Controller {
 
 		if ($auth = $this->m_base->getWhere('auth', $where)) {
 
-			$where = array(
-				'id' => $auth->user_id,
-			);
-
-			if($user = $this->m_base->getWhere('users', $where)) {
-
-				$data_session = array(
-					'id' 		=> $auth->id,
-					'email'		=> $auth->email,
-					'user_type' => $auth->user_type,
-					'user_id'   => $user->id,
-					'name'     	=> $user->name,
-					'phone' 	=> $user->phone,
-					'address'	=> $user->address,
-					'postal_code'	=> $user->postal_code,
-					'dob'		=> $user->dob,
-					'user_type' => $auth->user_type
+			if ($auth->status == false) {
+				$this->session->set_flashdata('message', "Akun nonaktif");
+				redirect('auth','refresh');
+			} else {
+				$where = array(
+					'id' => $auth->user_id,
 				);
 
-				$this->session->set_userdata($data_session);
-				$this->session->set_flashdata('success', "Hello ".$user->name." :)");
+				if($user = $this->m_base->getWhere('users', $where)) {
 
-				if ($auth->user_type == 'customer') {
-					redirect(base_url("home"));
+					$data_session = array(
+						'id' 		=> $auth->id,
+						'email'		=> $auth->email,
+						'user_type' => $auth->user_type,
+						'user_id'   => $user->id,
+						'name'     	=> $user->name,
+						'phone' 	=> $user->phone,
+						'address'	=> $user->address,
+						'postal_code'	=> $user->postal_code,
+						'dob'		=> $user->dob,
+						'user_type' => $auth->user_type
+					);
+
+					$this->session->set_userdata($data_session);
+					$this->session->set_flashdata('success', "Hello ".$user->name." :)");
+
+					if ($auth->user_type == 'customer') {
+						redirect(base_url("home"));
+					} else {
+						redirect(base_url("booking"));
+					}
 				} else {
-					redirect(base_url("booking"));
-				}
-			} else {
 
-				$this->session->set_flashdata('message', "Unregistered User");
-				redirect('auth','refresh');
+					$this->session->set_flashdata('message', "User tidak terdaftar");
+					redirect('auth','refresh');
+
+				}
 
 			}
 

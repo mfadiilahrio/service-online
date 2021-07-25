@@ -54,6 +54,8 @@
 <!-- AdminLTE App -->
 <script src="<?= base_url('assets/dist/js/adminlte.min.js'); ?>"></script>
 <!-- Page specific script -->
+<script src="<?= base_url('assets/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js'); ?>"></script>
+
 <script>
   $(function () {
     var path = window.location.href;

@@ -40,6 +40,9 @@
   <!-- jQuery -->
   <script src="<?= base_url('assets/plugins/jquery/jquery.min.js'); ?>"></script>
   <script src="<?= base_url('assets/plugins/jquery/loadingoverlay.min.js'); ?>"></script>
+  <!-- Bootstrap datepicker -->
+  <link rel="stylesheet" type="text/css" href="<?= base_url('assets/plugins/bootstrap-datepicker/css/bootstrap-datepicker.min.css'); ?>">
+  <link rel="stylesheet" type="text/css" href="<?= base_url('assets/plugins/bootstrap-datepicker/css/bootstrap-datepicker.standalone.min.css'); ?>">
 </head>
 <body class="hold-transition sidebar-mini">
 <div class="wrapper">

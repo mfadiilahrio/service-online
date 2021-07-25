@@ -17,7 +17,8 @@ class M_booking extends CI_Model {
 			areas.name as area_name,
 			m.name as mechanic_name,
 			banks.name as bank_name,
-			bank_accounts.account_number');
+			bank_accounts.account_number,
+			(SELECT SUM(booking_items.price * booking_items.qty) FROM booking_items WHERE booking_items.booking_id = bookings.id) + bookings.other_cost as total');
 		$this->db->join('users u', 'u.id = bookings.user_id', 'left');
 		$this->db->join('auth', 'auth.user_id = u.id', 'left');
 		$this->db->join('services', 'services.id = bookings.service_id', 'left');
@@ -33,7 +34,7 @@ class M_booking extends CI_Model {
 		return $this->generateBookingStatus($data);
 	}
 
-	function getBookings($where) {
+	function getBookings($where, $month = NULL, $year = NULL) {
 		$this->db->select('
 			bookings.*,
 			u.name as user_name,
@@ -47,7 +48,8 @@ class M_booking extends CI_Model {
 			areas.name as area_name,
 			m.name as mechanic_name,
 			banks.name as bank_name,
-			bank_accounts.account_number');
+			bank_accounts.account_number,
+			(SELECT SUM(booking_items.price * booking_items.qty) FROM booking_items WHERE booking_items.booking_id = bookings.id) + bookings.other_cost as total');
 		$this->db->join('users u', 'u.id = bookings.user_id', 'left');
 		$this->db->join('auth', 'auth.user_id = u.id', 'left');
 		$this->db->join('services', 'services.id = bookings.service_id', 'left');
@@ -57,6 +59,11 @@ class M_booking extends CI_Model {
 		$this->db->join('bank_accounts', 'bank_accounts.id = bookings.bank_account_id', 'left');
 		$this->db->join('banks', 'banks.id = bank_accounts.bank_id', 'left');
 		$this->db->order_by("bookings.created_at", "desc");
+
+		if ($month != null && $year != null) {
+			$this->db->where('MONTH(bookings.date)', $month);
+			$this->db->where('YEAR(bookings.date)', $year);	
+		}
 
 		$result = $this->db->get_where('bookings', $where)->result();
 

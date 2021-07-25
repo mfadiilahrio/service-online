@@ -46,6 +46,7 @@
                     <th>Merek</th>
                     <th>Tipe</th>
                     <th>Nama</th>
+                    <th>Stok</th>
                     <th>Harga</th>
                   </tr>
                   </thead>
@@ -58,6 +59,7 @@
                         <td><?= $record->brand_name ?></td>
                         <td><?= $record->brand_type_name ?></td>
                         <td><?= $record->name ?></td>
+                        <td><?= $record->qty ?></td>
                         <td><?= "Rp " . number_format($record->price, 0, ",", ".") ?></td>
                       </tr>
                       <?php $no++; } ?>

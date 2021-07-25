@@ -61,10 +61,6 @@ class Product extends CI_Controller {
 		$name = $this->input->post('name');
 		$price = $this->input->post('price');
 		$qty = $this->input->post('qty');
-
-		if ($id == '') {
-			$this->form_validation->set_rules('brand_type_id', 'Tipe', 'required|numeric');
-		}
 		
 		$this->form_validation->set_rules('name', 'Nama', 'required');
 		$this->form_validation->set_rules('price', 'Harga', 'required');
@@ -77,10 +73,9 @@ class Product extends CI_Controller {
 				'qty' => $qty
 			);
 
-			if ($id == '') {
+			if (is_numeric($brand_type_id)) {
 				$data['brand_type_id'] = $brand_type_id;
 			}
-
 
 			if ($id == '') {
 				if ($item_id = $this->m_base->createDataWithInsertID('items', $data)) {

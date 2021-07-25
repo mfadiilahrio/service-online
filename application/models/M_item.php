@@ -11,8 +11,21 @@ class M_item extends CI_Model {
 		$this->db->join('brand_types', 'brand_types.id = items.brand_type_id', 'left');
 		$this->db->join('brands', 'brands.id = brand_types.brand_id', 'left');
 		$this->db->where('items.status', true);
+		$this->db->order_by('id', 'desc');
 
 		return $this->db->get_where('items')->result();
+	}
+
+	function getitem($where) {
+		$this->db->select('
+			items.*,
+			brand_types.name as brand_type_name,
+			brands.id as brand_id,
+			brands.name as brand_name');
+		$this->db->join('brand_types', 'brand_types.id = items.brand_type_id', 'left');
+		$this->db->join('brands', 'brands.id = brand_types.brand_id', 'left');
+
+		return $this->db->get_where('items', $where)->row();
 	}
 
 	function decreaseQty($id, $qty) {

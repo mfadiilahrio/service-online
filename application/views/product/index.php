@@ -26,7 +26,7 @@
     <section class="content">
       <div class="container-fluid">
         <div class="row">
-          <a href="<?= base_url("product/add") ?>" class="btn btn-app bg-success">
+          <a href="<?= base_url("product/edit") ?>" class="btn btn-app bg-success">
             <i class="fas fa-plus"></i> Tambah
           </a>
         </div>
@@ -52,7 +52,7 @@
                   <tbody>
                     <?php $no = 1; ?>
                     <?php foreach ($records as $record) { ?>
-                      <tr class="clickable-row" onclick="window.location='<?= base_url("product?id=$record->id") ?>'" class="clickable-row">
+                      <tr class="clickable-row" onclick="window.location='<?= base_url("product/edit?id=$record->id") ?>'" class="clickable-row">
                         <td><?= $no; ?></td>
                         <td><?= $record->id ?></td>
                         <td><?= $record->brand_name ?></td>

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:8889
--- Generation Time: Jul 25, 2021 at 09:01 PM
+-- Generation Time: Jul 27, 2021 at 01:57 PM
 -- Server version: 5.7.26
 -- PHP Version: 5.6.40
 
@@ -237,7 +237,8 @@ CREATE TABLE `brand_types` (
 INSERT INTO `brand_types` (`id`, `transportation_type_id`, `brand_id`, `name`, `status`) VALUES
 (1, 1, 1, 'Beat', 1),
 (2, 1, 2, 'Mio', 1),
-(3, 1, 4, 'Ninja 250 Fi', 1);
+(3, 1, 4, 'Ninja 250 Fi', 1),
+(4, 1, 1, 'Genio 2020', 1);
 
 -- --------------------------------------------------------
 
@@ -318,7 +319,8 @@ INSERT INTO `items` (`id`, `brand_type_id`, `name`, `price`, `image_url`, `qty`,
 (13, 2, 'Jok 2018', 350000, 'assets/images/items/item_13.png', 5, 1),
 (14, 1, 'Headlamp', 154900, 'assets/images/items/item_14.png', 10, 1),
 (15, NULL, 'Sein universal', 70000, 'assets/images/items/item_15.png', 50, 1),
-(16, 3, 'Knalpot yoshimura', 1500000, 'assets/images/items/item_16.png', 9, 1);
+(16, 3, 'Knalpot yoshimura', 1500000, 'assets/images/items/item_16.png', 9, 1),
+(17, 4, 'Handle Rem', 60000, 'assets/images/items/item_17.png', 100, 0);
 
 -- --------------------------------------------------------
 
@@ -560,7 +562,7 @@ ALTER TABLE `brands`
 -- AUTO_INCREMENT for table `brand_types`
 --
 ALTER TABLE `brand_types`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `carts`
@@ -578,7 +580,7 @@ ALTER TABLE `cart_items`
 -- AUTO_INCREMENT for table `items`
 --
 ALTER TABLE `items`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT for table `services`

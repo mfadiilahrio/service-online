@@ -62,9 +62,10 @@
           </div>
           <!-- /.card-header -->
           <div class="card-body">
+            <?php if($record != null): ?>
             <div class="card card-info">
               <div class="card-header">
-                <h3 class="card-title">Alamat</h3>
+                <h3 class="card-title">Info Pesanan</h3>
 
                 <div class="card-tools">
                   <button type="button" class="btn btn-tool" data-card-widget="collapse">
@@ -74,36 +75,82 @@
               </div>
               <!-- /.card-header -->
               <div class="card-body">
-                <p>
-                  <?= $this->session->userdata("address") ?>
-                </p>
+                <address>
+                  Booking ID : <strong><?= $record->id ?></strong><br>
+                </address>
+                <address>
+                  <?= $record->user_name ?><br>
+                  <?= $record->address.', '.$record->postal_code ?><br>
+                  Phone: <?= $record->phone ?><br>
+                  Email: <?= $record->user_email ?>
+                </address>
               </div>
             </div>
-            <div class="row">
-              <div class="col-md-3">
-                <div class="form-group">
-                  <label>Merek</label>
-                  <select name="brand_id" id="brand_id" class="form-control select2bs4" style="width: 100%;" required>
-                    <option>--Pilih Merek--</option>
-                    <?php 
-                    foreach ($brands as $data) {
-                      echo '<option value="'.$data->id.'">'.$data->name.'</option>';
-                    }
-                    ?>
-                  </select>
+            <?php endif ?>
+            <form action="booking/createbooking" method="POST" enctype="multipart/form-data">
+              <div class="row">
+                <div class="col-md-6">
+                  <?php if($record == null): ?>
+                  <div class="form-group">
+                    <label>Area</label>
+                    <select name="area_id" class="form-control select2bs4" style="width: 100%;" required>
+                      <option>--Pilih Area--</option>
+                      <?php 
+                      foreach ($areas as $data) {
+                        echo '<option value="'.$data->id.'">'.$data->name.'</option>';
+                      }
+                      ?>
+                    </select>
+                    <input type="hidden" name="type" value="<?= $this->input->get('type') ?>">
+                  </div>
+                  <?php endif ?>
+                  <div class="form-group">
+                    <label>Merek</label>
+                    <select name="brand_id" id="brand_id" class="form-control select2bs4" style="width: 100%;" required>
+                      <option>--Pilih Merek--</option>
+                      <?php 
+                      foreach ($brands as $data) {
+                        echo '<option value="'.$data->id.'">'.$data->name.'</option>';
+                      }
+                      ?>
+                    </select>
+                    <input type="hidden" name="type" value="booking" required>
+                  </div>
+                  <div class="form-group">
+                    <label>Tipe</label>
+                    <select name="brand_type_id" id="brand_type_id" class="form-control select2bs4" style="width: 100%;" required>
+                    </select>
+                  </div>
+                  <?php if($record == null): ?>
+                  <div class="form-group">
+                    <label>Keluhan</label>
+                    <textarea name="complaint" class="form-control" required></textarea>
+                  </div>
+                  <div class="form-group">
+                    <label>Tanggal</label>
+                    <div class="input-group date" id="reservationdatetime" data-target-input="nearest">
+                      <input type="text" class="form-control datetimepicker-input" name="date" data-target="#reservationdatetime" readonly required />
+                      <div class="input-group-append" data-target="#reservationdatetime" data-toggle="datetimepicker">
+                        <div class="input-group-text"><i class="fa fa-calendar"></i></div>
+                      </div>
+                    </div>
+                  </div>
+                  <?php endif ?>
                 </div>
-                <div class="form-group">
-                  <label>Tipe</label>
-                  <select name="brand_type_id" id="brand_type_id" class="form-control select2bs4" style="width: 100%;" required>
-                  </select>
+                <!-- /.col -->
+                <div class="col-md-6">
+                </div>
+                <!-- /.col -->
+              </div>
+              <?php if($record == null): ?>
+              <div class="row">
+                <div class="col-md-3">
+                  <button type="submit" id="create-booking" class="btn btn-outline-primary">Buat Pesanan</button>
                 </div>
               </div>
-              <!-- /.col -->
-              <div class="col-md-6">
-              </div>
-              <!-- /.col -->
+              <?php endif ?>
             </div>
-          </div>
+          </form>
           <!-- /.card-body -->
         </div>
         <!-- /.card -->
@@ -123,7 +170,9 @@
   <script type="text/javascript">
     $(document).ready(function() {
       $('#floating-cart').on( "click", function() {
-        window.location.href = "<?= base_url('cart?type=booking') ?>";
+        <?php if($record != null): ?>
+          window.location.href = "<?= base_url('cart?type=booking&user_id='.$record->user_id.'&booking_id='.$record->id) ?>";
+        <?php endif ?>
       });
 
       $('#brand_id').change(function(e) {
@@ -157,58 +206,63 @@
 
       $('#brand_type_id').change(function(e) {
 
-        $('#products').empty();
+        var id = <?= (isset($record->id)) ? $record->id : 0 ?>;
 
-        var data = {
-          'brand_type_id':$('#brand_type_id').val()
-        }
+        if (id != 0) {
+          $('#products').empty();
 
-        $.LoadingOverlay("show");
+          var data = {
+            'brand_type_id':$('#brand_type_id').val()
+          }
 
-        $.ajax({
-          type: 'GET',
-          url: "<?php echo base_url("bookingservice/getitemsbybrandtypeid")?>",
-          data: data,
-          dataType: "json",
-          success: function(resultData) { 
-            $.LoadingOverlay("hide");
+          $.LoadingOverlay("show");
 
-            var toAppend = '';
-            $.each(resultData,function(i,o){
-              var image_url = "";
-              if (o.image_url.length > 0) {
-                image_url = "<?php echo base_url('"+o.image_url+"')?>";
-              } else {
-                image_url = "<?php echo base_url("assets/images/image_placeholder.png")?>";
-              }
-              toAppend += '<div class="col-md-2">' +
-              '<div class="card">' +
+          $.ajax({
+            type: 'GET',
+            url: "<?php echo base_url("bookingservice/getitemsbybrandtypeid")?>",
+            data: data,
+            dataType: "json",
+            success: function(resultData) { 
+              $.LoadingOverlay("hide");
+
+              var toAppend = '';
+              $.each(resultData,function(i,o){
+                var image_url = "";
+                if (o.image_url.length > 0) {
+                  image_url = "<?php echo base_url('"+o.image_url+"')?>";
+                } else {
+                  image_url = "<?php echo base_url("assets/images/image_placeholder.png")?>";
+                }
+                toAppend += '<div class="col-md-2">' +
+                '<div class="card">' +
                 '<a href="#" class="p-3">' +
-                  '<img src="'+image_url+'" class="card-img-top" style="height: 200px;object-fit: contain;" alt="'+image_url+'">' +
+                '<img src="'+image_url+'" class="card-img-top" style="height: 200px;object-fit: contain;" alt="'+image_url+'">' +
                 '</a>' +
                 '<div class="card-body">' +
-                  '<div class="row">' +
-                    '<div class="col-md-12">' +
-                      '<h5 class="card-title text-bold">'+o.name+'</h5>' +
-                    '</div>' +
-                  '</div>' +
+                '<div class="row">' +
+                '<div class="col-md-12">' +
+                '<h5 class="card-title text-bold">'+o.name+'</h5>' +
+                '</div>' +
+                '</div>' +
                 '</div>' +
                 '<div class="card-footer">' +
-                  '<p class="text text-secondary">Rp.'+o.price+'</p>' +
-                  '<div onclick="addToBookingItems('+o.id+')" class="btn btn-sm btn-outline-info btn-block">Tambah ke keranjang</div>' +
+                '<p class="text text-secondary">Rp.'+o.price+'</p>' +
+                '<div onclick="addToBookingItems('+o.id+')" class="btn btn-sm btn-outline-info btn-block">Tambah ke keranjang</div>' +
                 '</div>' +
-              '</div>' +
-              '<br>' +
-            '</div>';
-           });
-            $('#products').append(toAppend);
-          }
-        });
+                '</div>' +
+                '<br>' +
+                '</div>';
+              });
+              $('#products').append(toAppend);
+            }
+          });
+        }
       });       
     });
 
     function addToBookingItems(id) {
       var data = {
+        'user_id':<?= (isset($record->user_id)) ? $record->user_id : $this->session->userdata('user_id'); ?>,
         'type':'booking',
         'item_id':id
       }

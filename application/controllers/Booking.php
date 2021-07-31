@@ -15,6 +15,7 @@ class Booking extends CI_Controller {
 		$this->load->model('m_item');
 		$this->load->model('m_workshop');
 		$this->load->model('m_user');
+		$this->load->model('m_bankaccount');
 		$this->timeStamp = date('Y-m-d H:i:s', time());
 	}
 
@@ -28,6 +29,7 @@ class Booking extends CI_Controller {
 		$print = ($this->input->get('print') != null) ? true : false;
 
 		if ($id != null) {
+			$data['bank_accounts'] = $this->m_bankaccount->getBankAccounts(array());
 			$data['record'] = $this->m_booking->getBooking(array('bookings.id' => $id));
 			$data['records'] = $this->m_booking->getBookingItems($id);
 			$data['workshops'] = $this->m_workshop->getWorkshops();
@@ -41,7 +43,7 @@ class Booking extends CI_Controller {
 
 			$data['subtotal'] = $subtotal + $data['record']->other_cost;
 
-			$view = ($print) ? 'booking/invoice_print' :'booking/booking_detail';
+			$view = ($print) ? 'booking/invoice_print' : 'booking/booking_detail';
 		} else {
 			if ($this->session->userdata('user_type') == 'customer') {
 				$where['bookings.user_id'] = $this->session->userdata('user_id');
@@ -81,8 +83,9 @@ class Booking extends CI_Controller {
 			if ($type == 'booking') {
 				$this->form_validation->set_rules('complaint', 'Keluhan', 'required');
 				$this->form_validation->set_rules('date', 'Tanggal', 'required');
+			} else {
+				$this->form_validation->set_rules('bank_account_id', 'Metode pembayaran', 'required|numeric');
 			}
-			$this->form_validation->set_rules('bank_account_id', 'Metode pembayaran', 'required|numeric');
 
 			if($this->form_validation->run()) {
 
@@ -101,30 +104,35 @@ class Booking extends CI_Controller {
 
 				if ($booking_id = $this->m_base->createDataWithInsertID('bookings', $data)) {
 
-					$cart_items = $this->m_cart->getData($this->session->userdata('id'), $type);
+					if ($type == 'booking') {
+						$this->session->set_flashdata('success', 'Pesanan anda berhasil dibuat');
+						redirect('booking','refresh');
+					} else {
+						$cart_items = $this->m_cart->getData($this->session->userdata('user_id'), $type);
 
-					foreach ($cart_items as $cart_item) {
-						$booking_item_data = array(
-							'booking_id' => $booking_id,
-							'item_id' => $cart_item->item_id,
-							'price' => $cart_item->price,
-							'qty' => $cart_item->qty
+						foreach ($cart_items as $cart_item) {
+							$booking_item_data = array(
+								'booking_id' => $booking_id,
+								'item_id' => $cart_item->item_id,
+								'price' => $cart_item->price,
+								'qty' => $cart_item->qty
+							);
+
+							$this->m_base->createData('booking_items', $booking_item_data);
+
+							$this->m_item->decreaseQty($cart_item->item_id, $cart_item->qty);
+						}
+
+						$cart_data = array(
+							'status' => false
 						);
 
-						$this->m_base->createData('booking_items', $booking_item_data);
-
-						$this->m_item->decreaseQty($cart_item->item_id, $cart_item->qty);
-					}
-
-					$cart_data = array(
-						'status' => false
-					);
-
-					if ($this->m_cart->nonactivateCarts($cart_data, $this->session->userdata('user_id'), $type)) {
-						$this->session->set_flashdata('success', 'Pesanan anda berhasil dibuat');
-						redirect('booking','refresh'); 
-					} else { 
-						$this->session->set_flashdata('message', 'Gagal menghapus daftar keranjang anda'); 
+						if ($this->m_cart->nonactivateCarts($cart_data, $this->session->userdata('user_id'), $type)) {
+							$this->session->set_flashdata('success', 'Pesanan anda berhasil dibuat');
+							redirect('booking','refresh'); 
+						} else { 
+							$this->session->set_flashdata('message', 'Gagal menghapus daftar keranjang anda'); 
+						}
 					}
 				} else {
 					$this->session->set_flashdata('message', 'Pesanan anda gagal dibuat');
@@ -207,6 +215,37 @@ class Booking extends CI_Controller {
 		}
 	}
 
+	public function addtobookingitems()
+	{
+		$booking_id = $this->input->post('booking_id');
+		$user_id = $this->input->post('user_id');
+
+		$cart_items = $this->m_cart->getData($user_id, 'booking');
+
+		foreach ($cart_items as $cart_item) {
+			$booking_item_data = array(
+				'booking_id' => $booking_id,
+				'item_id' => $cart_item->item_id,
+				'price' => $cart_item->price,
+				'qty' => $cart_item->qty
+			);
+
+			$this->m_base->createData('booking_items', $booking_item_data);
+
+			$this->m_item->decreaseQty($cart_item->item_id, $cart_item->qty);
+		}
+
+		$cart_data = array(
+			'status' => false
+		);
+
+		if ($this->m_cart->nonactivateCarts($cart_data, $user_id, 'booking')) {
+			redirect('booking?id='.$booking_id,'refresh'); 
+		} else { 
+			$this->session->set_flashdata('message', 'Gagal menghapus daftar keranjang anda'); 
+		}
+	}
+
 	public function customerupdatebookingstatus()
 	{
 		if ($this->session->userdata('user_type') == 'customer' || $this->session->userdata('user_type') == 'admin') {
@@ -263,6 +302,7 @@ class Booking extends CI_Controller {
 
 	public function uploadpaymentreceipt(){
 		$id = $this->input->post('id');
+		$bank_account_id = $this->input->post('bank_account_id');
 
 		$this->form_validation->set_rules('id', 'ID', 'required|numeric');
 
@@ -270,7 +310,7 @@ class Booking extends CI_Controller {
 			$filename = 'payment_'.$id.'.png';
 
 			$config['upload_path']          = './assets/images/payments/';
-			$config['allowed_types']        = 'gif|jpg|png';
+			$config['allowed_types']        = 'gif|jpg|png|jpeg';
 			$config['file_name']            = $filename;
 			$config['overwrite']			= true;
 			$config['max_size']             = 1024;
@@ -282,7 +322,8 @@ class Booking extends CI_Controller {
 			if ($this->upload->do_upload('image')) {
 				$data = array(
 					'booking_status' => 'checking_payment',
-					'payment_url' => 'assets/images/payments/'.$filename
+					'payment_url' => 'assets/images/payments/'.$filename,
+					'bank_account_id' => $bank_account_id
 				);
 
 				if ($this->m_base->updateData('bookings', $data, 'id', $id)) {
@@ -290,8 +331,8 @@ class Booking extends CI_Controller {
 				} else {
 					$this->session->set_flashdata('message', "Error saat mengupdate status pesanan");
 				}
-			} else{
-				$this->session->set_flashdata('message', "Error saat mengupload bukti pembayaran");
+			} else {
+				$this->session->set_flashdata('message', $this->upload->display_errors());
 			}
 			redirect('booking?id='.$id,'refresh');
 		} else {

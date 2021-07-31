@@ -23,25 +23,27 @@ class Cart extends CI_Controller {
 
 		$type = $this->input->get('type');
 
+		$data['booking_id'] = $this->input->get('booking_id');
+		$data['user_id'] = $this->input->get('user_id');
 		$data['areas'] = $this->m_base->getListWhere('areas', array());
 		$data['bank_accounts'] = $this->m_bankaccount->getBankAccounts(array());
-		$data['records'] = $this->m_cart->getData($this->session->userdata('id'), $type);
+		$data['records'] = $this->m_cart->getData($data['user_id'], $type);
 
 		$data['hide_content'] = true;
 
 		if ($type == 'shopping') {
-			$cart_total = $this->m_cart->getTotalCartItems($this->session->userdata('user_id'));
+			$cart_total = $this->m_cart->getTotalCartItems($data['user_id']);
 			if ($cart_total->qty > 0) {
 				$data['hide_content'] = false; 
 			}
 		} else {
-			$booking_cart_total = $this->m_cart->getTotalBookingCartItems($this->session->userdata('user_id'));
+			$booking_cart_total = $this->m_cart->getTotalBookingCartItems($data['user_id']);
 			if ($booking_cart_total->qty > 0) {
 				$data['hide_content'] = false; 
 			}
 		}
 
-		$data['subtotal'] = $this->getcartsubtotal($type);
+		$data['subtotal'] = $this->getcartsubtotal($data['user_id'], $type);
 
 		$data['page_name'] = $this->page_name;
 		$this->header();
@@ -65,7 +67,7 @@ class Cart extends CI_Controller {
 
 	public function addtocart()
 	{
-		$user_id = $this->session->userdata('user_id');
+		$user_id = $this->input->post('user_id');
 		$item_id = $this->input->post('item_id');
 		$type = $this->input->post('type');
 
@@ -109,7 +111,7 @@ class Cart extends CI_Controller {
 			if ($this->m_base->updateData('cart_items', $cart_item_data, 'id', $cart_item->id)) {
 				echo json_encode(array(
 					'message' => 'Sukses menambahkan ke keranjang', 
-					'result' => $this->getcarttotalbytype($type)
+					'result' => $this->getcarttotalbytype($type, $user_id)
 				));
 			} else {
 				echo json_encode(array('error' => 'Error saat menambahkan ke keranjang'));
@@ -118,7 +120,7 @@ class Cart extends CI_Controller {
 			if ($this->m_base->createData('cart_items', $cart_item_data)) {
 				echo json_encode(array(
 					'message' => 'Sukses menambahkan ke keranjang', 
-					'result' => $this->getcarttotalbytype($type)
+					'result' => $this->getcarttotalbytype($type, $user_id)
 				));
 			} else {
 				echo json_encode(array('error' => 'Error saat menambahkan ke keranjang'));
@@ -126,15 +128,16 @@ class Cart extends CI_Controller {
 		}
 	}
 
-	public function getcarttotalbytype($type) {
+	public function getcarttotalbytype($type, $user_id) {
 		if ($type == 'shopping') {
-			return $this->m_cart->getTotalCartItems($this->session->userdata('user_id'));
+			return $this->m_cart->getTotalCartItems($user_id);
 		} else {
-			return $this->m_cart->getTotalBookingCartItems($this->session->userdata('user_id'));
+			return $this->m_cart->getTotalBookingCartItems($user_id);
 		}
 	}
 
 	public function updatecartitem() {
+		$user_id = $this->input->post('user_id');
 		$id = $this->input->post('id');
 		$type = $this->input->post('type');
 		$type_update = $this->input->post('type_update');
@@ -147,10 +150,10 @@ class Cart extends CI_Controller {
 			} else {
 				if ($this->m_cart->updateQty($type_update, 'id', $id)) {
 					$result = array(
-						'subtotal' => $this->getcartsubtotal($type), 
+						'subtotal' => $this->getcartsubtotal($user_id, $type), 
 						'cartItem' => $this->m_base->getWhere('cart_items', array('id' => $id)),
-						'bookingCartTotal' => $this->getcarttotalbytype('booking'),
-						'cartTotal' => $this->getcarttotalbytype('shopping')
+						'bookingCartTotal' => $this->getcarttotalbytype('booking', $user_id),
+						'cartTotal' => $this->getcarttotalbytype('shopping', $user_id)
 					);
 
 					echo json_encode(array(
@@ -169,6 +172,7 @@ class Cart extends CI_Controller {
 	public function deletecartitem() {
 		$id = $this->input->post('id');
 		$type = $this->input->post('type');
+		$user_id = $this->input->post('user_id');
 
 		if ($id != null && $type != null) {
 			if ($this->m_base->deleteData('cart_items', array('id' => $id))) {
@@ -176,21 +180,21 @@ class Cart extends CI_Controller {
 				$hide_content = true;
 
 				if ($type == 'shopping') {
-					$cart_total = $this->m_cart->getTotalCartItems($this->session->userdata('user_id'));
+					$cart_total = $this->m_cart->getTotalCartItems($user_id);
 					if ($cart_total->qty > 0) {
 						$hide_content = false; 
 					}
 				} else {
-					$booking_cart_total = $this->m_cart->getTotalBookingCartItems($this->session->userdata('user_id'));
+					$booking_cart_total = $this->m_cart->getTotalBookingCartItems($user_id);
 					if ($booking_cart_total->qty > 0) {
 						$hide_content = false; 
 					}
 				}
 
 				$result = array(
-					'subtotal' => $this->getcartsubtotal($type),
-					'bookingCartTotal' => $this->getcarttotalbytype('booking'),
-					'cartTotal' => $this->getcarttotalbytype('shopping'),
+					'subtotal' => $this->getcartsubtotal($user_id, $type),
+					'bookingCartTotal' => $this->getcarttotalbytype('booking', $user_id),
+					'cartTotal' => $this->getcarttotalbytype('shopping', $user_id),
 					'hideContent' => $hide_content
 				);
 
@@ -206,8 +210,8 @@ class Cart extends CI_Controller {
 		}
 	}
 
-	public function getcartsubtotal($type) {
-		$data = $this->m_cart->getData($this->session->userdata('id'), $type);
+	public function getcartsubtotal($user_id, $type) {
+		$data = $this->m_cart->getData($user_id, $type);
 
 		$subtotal = 0;
 

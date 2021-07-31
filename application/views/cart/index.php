@@ -120,7 +120,15 @@
                       <p class="text text-bold float-right" id="subtotal"><?= "Rp " . $subtotal ?></p>
                     </div>
                   </div>
+                  <?php if($booking_id != null && $user_id != null): ?>
+                  <form action="booking/addtobookingitems" method="POST" enctype="multipart/form-data">
+                    <input type="hidden" name="booking_id" value="<?= $booking_id ?>">
+                    <input type="hidden" name="user_id" value="<?= $user_id ?>">
+                    <button class="btn btn-outline-primary btn-block">Tambahkan Barang</button>
+                  </form>
+                  <?php endif ?>
                 </div>
+                <?php if($booking_id == null): ?>
                 <div class="callout <?= ($is_empty_address) ? 'callout-danger' : 'callout-info' ?>">
                   <h6><i class="fas fa-info"></i> Alamat:</h6>
                   <?php 
@@ -182,6 +190,7 @@
                     </div>
                   </div>
                 </form>
+                <?php endif ?>
               </div>
               <!-- /.card-body -->
             </div>
@@ -208,6 +217,7 @@
       var urlParams = new URLSearchParams(window.location.search);
 
       var data = {
+        'user_id':<?= $user_id ?>,
         'type': urlParams.get('type'),
         'id': id,
         'type_update': type_update
@@ -236,7 +246,8 @@
 
       var data = {
         'type': urlParams.get('type'),
-        'id': id
+        'id': id,
+        'user_id': <?= $user_id ?>
       }
 
       $.ajax({

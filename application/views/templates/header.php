@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link href="<?php echo base_url('assets/images/logo1.png'); ?>" rel="icon">
-  <title>Service Online Admin</title>
+  <title>Service Online | <?= ucwords($this->session->userdata('user_type')) ?></title>
 
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
@@ -44,7 +44,7 @@
   <link rel="stylesheet" type="text/css" href="<?= base_url('assets/plugins/bootstrap-datepicker/css/bootstrap-datepicker.min.css'); ?>">
   <link rel="stylesheet" type="text/css" href="<?= base_url('assets/plugins/bootstrap-datepicker/css/bootstrap-datepicker.standalone.min.css'); ?>">
 </head>
-<body class="hold-transition sidebar-mini">
+<body class="hold-transition sidebar-mini layout-navbar-fixed">
 <div class="wrapper">
   <!-- Navbar -->
   <nav class="main-header navbar navbar-expand navbar-white navbar-light">
@@ -138,9 +138,9 @@
         </div>
       </li>
       <!-- Notifications Dropdown Menu -->
-      <?php if ($this->session->userdata('user_type')) : ?>
+      <?php if ($this->session->userdata('user_type') == 'customer') : ?>
       <li class="nav-item dropdown">
-        <a class="nav-link" href="<?= base_url("cart?type=shopping") ?>">
+        <a class="nav-link" href="<?= base_url("cart?type=shopping&user_id=".$this->session->userdata('user_id')) ?>">
           <i class="fas fa-shopping-cart"></i>
           <span class="badge badge-warning navbar-badge" id="cart_total">
             <?= (isset($cart_total->qty)) ? $cart_total->qty : "0" ?>
@@ -148,7 +148,7 @@
         </a>
       </li>
       <li class="nav-item dropdown">
-        <a class="nav-link" href="<?= base_url("cart?type=booking") ?>">
+        <a class="nav-link" href="<?= base_url("cart?type=booking&user_id=".$this->session->userdata('user_id')) ?>" hidden>
           <i class="fas fa-cogs"></i>
           <span class="badge badge-warning navbar-badge" id="booking_cart_total">
             <?= (isset($booking_cart_total->qty)) ? $booking_cart_total->qty : "0" ?>

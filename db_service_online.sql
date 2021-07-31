@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:8889
--- Generation Time: Jul 27, 2021 at 01:57 PM
+-- Generation Time: Jul 31, 2021 at 07:39 PM
 -- Server version: 5.7.26
 -- PHP Version: 5.6.40
 
@@ -62,7 +62,8 @@ INSERT INTO `auth` (`id`, `email`, `password`, `user_id`, `user_type`, `status`)
 (4, 'muhamadfrio+1@gmail.com', '5d7845ac6ee7cfffafc5fe5f35cf666d', 4, 'mechanic', 1),
 (5, 'muhamadfrio+2@gmail.com', '5d7845ac6ee7cfffafc5fe5f35cf666d', 5, 'customer', 1),
 (6, 'raja@gmail.com', '5d7845ac6ee7cfffafc5fe5f35cf666d', 7, 'customer', 1),
-(8, 'bertus@gmail.com', '5d7845ac6ee7cfffafc5fe5f35cf666d', 9, 'mechanic', 1);
+(8, 'bertus@gmail.com', '5d7845ac6ee7cfffafc5fe5f35cf666d', 9, 'mechanic', 1),
+(9, 'muhamadfrio+3@gmail.com', '5d7845ac6ee7cfffafc5fe5f35cf666d', 10, 'customer', 1);
 
 -- --------------------------------------------------------
 
@@ -133,14 +134,6 @@ CREATE TABLE `bookings` (
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---
--- Dumping data for table `bookings`
---
-
-INSERT INTO `bookings` (`id`, `user_id`, `service_id`, `workshop_id`, `area_id`, `mechanic_id`, `type`, `complaint`, `date`, `address`, `phone`, `postal_code`, `other_cost`, `other_cost_note`, `booking_status`, `bank_account_id`, `awb_number`, `payment_url`, `created_at`) VALUES
-(10019, 2, 2, 2, 5, 3, 'booking', 'Rusak habis crash', '2021-07-26 01:51:56', 'Perumahan Taman Alamanda Blok G11 No.29 Rt 002 RW 022 Tambun Utara', '0895-2903-7444', 17510, 50000, 'urut kabel', 'completed', 2, NULL, 'assets/images/payments/payment_10019.png', '2021-07-25 18:52:01'),
-(10020, 2, 1, 1, 5, NULL, 'shopping', NULL, '2021-07-26 01:59:35', 'Perumahan Taman Alamanda Blok G11 No.29 Rt 002 RW 022 Tambun Utara', '0895-2903-7444', 17510, 0, NULL, 'completed', 2, 'awb-099879879', 'assets/images/payments/payment_10020.png', '2021-07-25 18:59:35');
-
 -- --------------------------------------------------------
 
 --
@@ -154,15 +147,6 @@ CREATE TABLE `booking_items` (
   `price` bigint(20) NOT NULL,
   `qty` int(11) NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Dumping data for table `booking_items`
---
-
-INSERT INTO `booking_items` (`id`, `booking_id`, `item_id`, `price`, `qty`) VALUES
-(28, 10019, 14, 154900, 1),
-(29, 10019, 12, 110000, 1),
-(30, 10020, 16, 1500000, 1);
 
 -- --------------------------------------------------------
 
@@ -253,14 +237,6 @@ CREATE TABLE `carts` (
   `status` tinyint(1) NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---
--- Dumping data for table `carts`
---
-
-INSERT INTO `carts` (`id`, `user_id`, `type`, `status`) VALUES
-(22, 2, 'booking', 0),
-(23, 2, 'shopping', 0);
-
 -- --------------------------------------------------------
 
 --
@@ -273,15 +249,6 @@ CREATE TABLE `cart_items` (
   `item_id` int(11) NOT NULL,
   `qty` int(11) NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
---
--- Dumping data for table `cart_items`
---
-
-INSERT INTO `cart_items` (`id`, `cart_id`, `item_id`, `qty`) VALUES
-(94, 22, 14, 1),
-(95, 22, 12, 1),
-(96, 23, 16, 1);
 
 -- --------------------------------------------------------
 
@@ -308,19 +275,19 @@ INSERT INTO `items` (`id`, `brand_type_id`, `name`, `price`, `image_url`, `qty`,
 (2, 1, 'Kampas rem belakang', 60000, '', 98, 1),
 (3, 2, 'Kampas rem depan', 40000, '', 99, 1),
 (4, 2, 'Kampas rem belakang', 50000, '', 99, 1),
-(5, NULL, 'Pertamina Enduro Matic, 10W-30, API SL, JASO MB 0.8L 1pc', 45000, 'assets/images/items/item_5.png', 95, 1),
+(5, NULL, 'Pertamina Enduro Matic, 10W-30, API SL, JASO MB 0.8L 1pc', 45000, 'assets/images/items/item_5.png', 92, 1),
 (6, 1, 'Filter udara', 85000, '', 100, 1),
 (7, 1, 'Lampu depan', 25900, '', 100, 1),
 (8, 1, 'Kampas rem belakang', 60000, '', 98, 1),
 (9, 1, 'Lampu belakang', 26000, '', 99, 1),
 (10, 1, 'Lampu sein', 15000, '', 98, 1),
-(11, NULL, 'Minyak rem', 25900, '', 96, 1),
-(12, 1, 'Handle rem', 110000, 'assets/images/items/item_12.png', 99, 1),
-(13, 2, 'Jok 2018', 350000, 'assets/images/items/item_13.png', 5, 1),
-(14, 1, 'Headlamp', 154900, 'assets/images/items/item_14.png', 10, 1),
-(15, NULL, 'Sein universal', 70000, 'assets/images/items/item_15.png', 50, 1),
+(11, NULL, 'Minyak rem', 25900, '', 93, 1),
+(12, 1, 'Handle rem', 110000, 'assets/images/items/item_12.png', 98, 1),
+(13, 2, 'Jok 2018', 350000, 'assets/images/items/item_13.png', 4, 1),
+(14, 1, 'Headlamp', 154900, 'assets/images/items/item_14.png', 9, 1),
+(15, NULL, 'Sein universal', 70000, 'assets/images/items/item_15.png', 45, 1),
 (16, 3, 'Knalpot yoshimura', 1500000, 'assets/images/items/item_16.png', 9, 1),
-(17, 4, 'Handle Rem', 60000, 'assets/images/items/item_17.png', 100, 0);
+(17, 4, 'Handle Rem', 60000, 'assets/images/items/item_17.png', 98, 0);
 
 -- --------------------------------------------------------
 
@@ -392,7 +359,8 @@ INSERT INTO `users` (`id`, `name`, `phone`, `address`, `postal_code`, `dob`) VAL
 (6, 'M Fadhilah Rio Bagus Saputroo', '0895-2903-7443', 'Perumahan Taman Alamanda Blok G11 No.29 Rt 002 RW 022 Tambun Utara', 17510, '1998-05-09'),
 (7, NULL, NULL, NULL, NULL, NULL),
 (8, NULL, NULL, NULL, NULL, NULL),
-(9, 'Betus', '0876-2256-675_', 'Perumahan taman anggrek tambun utara\r\n', 17510, '1998-07-26');
+(9, 'Betus', '0876-2256-675_', 'Perumahan taman anggrek tambun utara\r\n', 17510, '1998-07-26'),
+(10, 'Rio', '0895-2903-7444', 'Bekasi', 17510, '1998-07-08');
 
 -- --------------------------------------------------------
 
@@ -526,7 +494,7 @@ ALTER TABLE `areas`
 -- AUTO_INCREMENT for table `auth`
 --
 ALTER TABLE `auth`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `banks`
@@ -544,13 +512,13 @@ ALTER TABLE `bank_accounts`
 -- AUTO_INCREMENT for table `bookings`
 --
 ALTER TABLE `bookings`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10021;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10031;
 
 --
 -- AUTO_INCREMENT for table `booking_items`
 --
 ALTER TABLE `booking_items`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=46;
 
 --
 -- AUTO_INCREMENT for table `brands`
@@ -568,13 +536,13 @@ ALTER TABLE `brand_types`
 -- AUTO_INCREMENT for table `carts`
 --
 ALTER TABLE `carts`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
 
 --
 -- AUTO_INCREMENT for table `cart_items`
 --
 ALTER TABLE `cart_items`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=97;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=126;
 
 --
 -- AUTO_INCREMENT for table `items`
@@ -598,7 +566,7 @@ ALTER TABLE `transportation_types`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `workshops`

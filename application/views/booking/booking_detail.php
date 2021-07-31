@@ -110,7 +110,15 @@
                 <!-- /.col -->
               </div>
               <!-- /.row -->
-
+              <?php if($record->type == 'booking' && ($record->complaint != null || $record->complaint != '')): ?>
+              <div class="row mb-5 mt-5">
+                <div class="col-md-12">
+                  <strong>Keluhan</strong><br>
+                  <p><?= $record->complaint ?></p>
+                </div>
+              </div>
+              <!-- /.row -->
+              <?php endif ?>
               <!-- Table row -->
               <div class="row">
                 <div class="col-12 table-responsive">
@@ -210,6 +218,18 @@
                       <input type="file" name="image" class="form-control" value="" required>
                       <input type="hidden" name="id" class="form-control" value="<?= $record->id ?>" required>
                     </div>
+                    <?php if ($record->type == 'booking') : ?>
+                    <div class="form-group">
+                      <select name="bank_account_id" id="bank_account_id" class="form-control select2bs4" style="width: 100%;">
+                        <option>--Pilih Rekening--</option>
+                        <?php 
+                        foreach ($bank_accounts as $data) {
+                          echo '<option value="'.$data->id.'">'.$data->method_name.'</option>';
+                        }
+                        ?>
+                      </select>
+                    </div>
+                  <?php endif ?>
                   </div>
                 </div>
                 <button class="btn btn-primary btn-sm" type="submit">Upload</button>
@@ -360,6 +380,7 @@
                   </div>
                 </div>
               </div>
+              <button class="btn btn-warning btn-sm" id="add-items">Tambahkan Barang</button>
               <button class="btn btn-primary btn-sm" id="send-bill">Kirim Tagihan</button>
             </div>
             <div class="modal-footer justify-content-between">
@@ -442,13 +463,18 @@
         updateBookingStatus(data);
       });
 
+      $( "#add-items" ).click(function() {
+        window.location.href = "<?= base_url('bookingservice?booking_id='.$record->id) ?>";
+      });
+
       $( "#send-bill" ).click(function() {
         var data = {
           'id':<?= $record->id ?>,
           'type':"<?= $record->type ?>",
           'booking_status': 'waiting_payment',
           'other_cost': $("#other_cost").val(),
-          'other_cost_note': $("#other_cost_note").val()
+          'other_cost_note': $("#other_cost_note").val(),
+          'bank_account_id': $("bank_account_id").val()
         }
 
         updateBookingStatus(data);

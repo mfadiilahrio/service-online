@@ -12,6 +12,7 @@ class Bookingservice extends CI_Controller {
 		$this->load->model('m_base');
 		$this->load->model('m_cart');
 		$this->load->model('m_bankaccount');
+		$this->load->model('m_booking');
 		$this->timeStamp = date('Y-m-d H:i:s', time());
 	}
 
@@ -20,6 +21,12 @@ class Bookingservice extends CI_Controller {
 		$data['success'] = $this->session->flashdata('success');
 		$data['error'] = $this->session->flashdata('error');
 
+		if ($this->input->get('booking_id') != null) {
+			$data['record'] = $this->m_booking->getBooking(array('bookings.id' => $this->input->get('booking_id')));
+		} else {
+			$data['record'] = null;
+		}
+		$data['areas'] = $this->m_base->getListWhere('areas', array());
 		$data['brands'] = $this->m_base->getListWhere('brands', array(), 'asc');
 		$data['booking_cart_total'] = $this->m_cart->getTotalBookingCartItems($this->session->userdata('user_id'));
 

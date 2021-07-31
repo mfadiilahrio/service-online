@@ -170,6 +170,7 @@
 
     function addToCartItems(id) {
       var data = {
+        'user_id' : <?= $this->session->userdata('user_id') ?>,
         'type':'shopping',
         'item_id':id
       }

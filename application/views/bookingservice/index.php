@@ -135,6 +135,10 @@
                       </div>
                     </div>
                   </div>
+                  <div class="form-group">
+                    <label>Alamat</label>
+                    <textarea name="address" class="form-control" required><?= $this->session->userdata('address') ?></textarea>
+                  </div>
                   <?php endif ?>
                 </div>
                 <!-- /.col -->

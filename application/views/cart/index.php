@@ -129,17 +129,6 @@
                   <?php endif ?>
                 </div>
                 <?php if($booking_id == null): ?>
-                <div class="callout <?= ($is_empty_address) ? 'callout-danger' : 'callout-info' ?>">
-                  <h6><i class="fas fa-info"></i> Alamat:</h6>
-                  <?php 
-                    if ($is_empty_address == false) { 
-                      echo $this->session->userdata("address") ;
-                    } else { 
-                      echo 'Mohon isi alamat terlebih dahulu';
-                      echo '<div class="row"><a href="'. base_url('profile') .'" role="button" class="btn btn-sm btn-outline-secondary btn-block mt-3">Isi Alamat</a></div>';
-                    }
-                  ?>
-                </div>
                 <form action="booking/createbooking" method="POST" enctype="multipart/form-data">
                   <div class="row">
                     <div class="col-md-12">
@@ -171,6 +160,14 @@
                       </div>
                       <?php endif ?>
                       <div class="form-group">
+                        <label>Alamat</label>
+                        <textarea name="address" class="form-control" required><?= $this->session->userdata('address') ?></textarea>
+                      </div>
+                      <div class="form-group">
+                        <label>Kode POS</label>
+                        <input type="number" name="postal_code" class="form-control" value="<?= $this->session->userdata('postal_code') ?>" required>
+                      </div>
+                      <div class="form-group">
                         <label>Metode pembayaran</label>
                         <select name="bank_account_id" class="form-control select2bs4" style="width: 100%;" required>
                           <option>--Pilih Rekening--</option>
@@ -186,7 +183,7 @@
                   </div>
                   <div class="row">
                     <div class="col-md-12">
-                      <button type="submit" id="create-booking" class="btn btn-outline-primary btn-block" <?= (count($records) < 1 || $is_empty_address) ? 'hidden' : '' ?>>Buat Pesanan</button>
+                      <button type="submit" id="create-booking" class="btn btn-outline-primary btn-block" <?= (count($records) < 1) ? 'hidden' : '' ?>>Buat Pesanan</button>
                     </div>
                   </div>
                 </form>

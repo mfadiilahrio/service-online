@@ -75,16 +75,21 @@ class Booking extends CI_Controller {
 		$area_id   = $this->input->post('area_id');
 		$complaint   = $this->input->post('complaint');
 		$date   = $this->input->post('date');
+		$address   = $this->input->post('address');
+		$postal_code   = $this->input->post('postal_code');
 		$bank_account_id   = $this->input->post('bank_account_id');
 
 		if ($type == 'shopping' || $type == 'booking') {
 			$this->form_validation->set_rules('type', 'Tipe Pesanan', 'required');
 			$this->form_validation->set_rules('area_id', 'Area', 'required|numeric');
+			$this->form_validation->set_rules('address', 'Alamat', 'required');
+
 			if ($type == 'booking') {
 				$this->form_validation->set_rules('complaint', 'Keluhan', 'required');
 				$this->form_validation->set_rules('date', 'Tanggal', 'required');
 			} else {
 				$this->form_validation->set_rules('bank_account_id', 'Metode pembayaran', 'required|numeric');
+				$this->form_validation->set_rules('postal_code', 'Kode pos', 'required|numeric');
 			}
 
 			if($this->form_validation->run()) {
@@ -96,9 +101,9 @@ class Booking extends CI_Controller {
 					'type' => $type,
 					'complaint' => ($type == 'booking') ? $complaint : NULL,
 					'date' => ($type == 'shopping') ? $this->timeStamp : $date,
-					'address' => $this->session->userdata('address'),
+					'address' => $address,
 					'phone' => $this->session->userdata('phone'),
-					'postal_code' => $this->session->userdata('postal_code'),
+					'postal_code' => $postal_code,
 					'bank_account_id' => $bank_account_id
 				);
 
@@ -303,6 +308,7 @@ class Booking extends CI_Controller {
 	public function uploadpaymentreceipt(){
 		$id = $this->input->post('id');
 		$bank_account_id = $this->input->post('bank_account_id');
+		$type = $this->input->post('type');
 
 		$this->form_validation->set_rules('id', 'ID', 'required|numeric');
 
@@ -323,8 +329,11 @@ class Booking extends CI_Controller {
 				$data = array(
 					'booking_status' => 'checking_payment',
 					'payment_url' => 'assets/images/payments/'.$filename,
-					'bank_account_id' => $bank_account_id
 				);
+
+				if ($type == 'booking') {
+					$data['bank_account_id'] = $bank_account_id;
+				}
 
 				if ($this->m_base->updateData('bookings', $data, 'id', $id)) {
 					$this->session->set_flashdata('success', 'Bukti pembayaran berhasil diupload');

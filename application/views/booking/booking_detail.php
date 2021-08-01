@@ -217,6 +217,7 @@
                     <div class="form-group">
                       <input type="file" name="image" class="form-control" value="" required>
                       <input type="hidden" name="id" class="form-control" value="<?= $record->id ?>" required>
+                      <input type="hidden" name="type" class="form-control" value="<?= $record->type ?>" required>
                     </div>
                     <?php if ($record->type == 'booking') : ?>
                     <div class="form-group">

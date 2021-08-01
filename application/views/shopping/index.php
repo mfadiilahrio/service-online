@@ -56,6 +56,9 @@
                   <?= $this->session->userdata("address") ?>
                 </p>
               </div>
+              <div class="card-footer">
+                <span class="text text-info"><i class="fas fa-info"></i> Alamat dapat diubah saat halaman checkout</span>
+              </div>
             </div>
             <div class="row">
               <div class="col-md-3">
